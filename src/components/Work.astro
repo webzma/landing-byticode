@@ -1,0 +1,121 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const projects = [
+  {
+    number: '01',
+    name: 'Nexara Studio',
+    tag: 'Web · Branding',
+    description: 'Identidad visual completa y sitio web para un estudio creativo de arquitectura.',
+    glowColor: 'var(--glow-lg)',
+    accentColor: 'oklch(0.55 0.22 245 / 30%)',
+    link: '#contact',
+  },
+  {
+    number: '02',
+    name: 'FlowSync App',
+    tag: 'App · UI/UX',
+    description: 'Aplicación de gestión de tareas con diseño minimalista y experiencia fluida.',
+    glowColor: 'var(--glow-md)',
+    accentColor: 'oklch(0.55 0.22 245 / 20%)',
+    link: '#contact',
+  },
+  {
+    number: '03',
+    name: 'Prismacore',
+    tag: 'Web · Consultoría',
+    description: 'Plataforma SaaS con rediseño completo de la experiencia de usuario.',
+    glowColor: 'var(--glow-xl)',
+    accentColor: 'oklch(0.55 0.22 245 / 40%)',
+    link: '#contact',
+  },
+];
+---
+
+<section id="work" class="bg-background py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
+  <div class="max-w-[1080px] mx-auto">
+
+    <SectionHeader
+      eyebrow="Proyectos"
+      title="Proyectos destacados"
+      class="mb-16 max-[640px]:mb-10">
+    </SectionHeader>
+
+    <div class="mb-10 flex justify-center max-[640px]:mb-8" data-reveal="soft" data-reveal-delay="3">
+      <a href="#contact" class="group inline-flex items-center gap-2 text-[0.875rem] font-medium text-white/45 hover:text-white transition-colors duration-300 ease-soft">
+        Trabajemos juntos
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true" class="transition-transform duration-300 ease-soft group-hover:translate-x-0.5">
+          <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-3 gap-5 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4">
+      {projects.map((p, i) => (
+        <a
+          href={p.link}
+          class="group relative rounded-[16px] overflow-hidden border border-white/10 flex flex-col transition-[border-color,transform] duration-500 ease-soft hover:border-white/20 hover:-translate-y-1 no-underline"
+          data-reveal
+          style={`--rd:${i * 90}ms`}
+          aria-label={`Ver proyecto ${p.name}`}
+        >
+          <!-- Browser mockup area -->
+          <div class="relative h-[190px] overflow-hidden border-b border-white/[0.07]">
+            <!-- Background glow -->
+            <div
+              class="absolute inset-0 pointer-events-none"
+              style={`background: radial-gradient(ellipse at 30% 50%, ${p.glowColor} 0%, transparent 68%)`}
+              aria-hidden="true"
+            ></div>
+            <!-- Subtle grid texture -->
+            <div
+              class="absolute inset-0 opacity-[0.025] pointer-events-none"
+              style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 36px 36px;"
+              aria-hidden="true"
+            ></div>
+            <!-- Browser chrome -->
+            <div class="absolute inset-0 p-4 flex flex-col gap-3">
+              <!-- Title bar with dots -->
+              <div class="flex items-center gap-[5px]">
+                <div class="w-2 h-2 rounded-full bg-white/15"></div>
+                <div class="w-2 h-2 rounded-full bg-white/15"></div>
+                <div class="w-2 h-2 rounded-full bg-white/15"></div>
+                <div class="flex-1 h-[16px] rounded bg-white/6 border border-white/8 ml-2"></div>
+              </div>
+              <!-- Mock UI content -->
+              <div class="flex flex-col gap-2 mt-1">
+                <div class="h-5 w-3/4 rounded bg-white/10"></div>
+                <div class="h-3 w-1/2 rounded bg-white/6"></div>
+                <div class="flex gap-2 mt-1">
+                  <div class="h-8 w-20 rounded-md" style={`background: ${p.accentColor}; border: 1px solid rgba(255,255,255,0.1)`}></div>
+                  <div class="h-8 flex-1 rounded-md bg-white/4 border border-white/8"></div>
+                </div>
+                <div class="h-3 w-5/6 rounded bg-white/5 mt-1"></div>
+                <div class="h-3 w-2/3 rounded bg-white/4"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info area -->
+          <div class="relative z-10 p-6 flex flex-col flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[0.6875rem] font-semibold tracking-[0.07em] uppercase text-white/35">{p.tag}</span>
+              <span class="text-[0.6875rem] text-white/20 font-['Courier_New',monospace]">{p.number}</span>
+            </div>
+            <h3 class="text-[1.125rem] font-bold tracking-[-0.025em] text-white mb-2">{p.name}</h3>
+            <p class="text-[0.875rem] text-white/50 leading-[1.55] m-0 flex-1">{p.description}</p>
+            <div class="mt-4 pt-4 border-t border-white/[0.07] flex items-center justify-between">
+              <span class="text-[0.75rem] text-white/30">Ver proyecto</span>
+              <div class="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-white/35 group-hover:text-white/65 group-hover:border-white/25 transition-colors duration-200">
+                <svg width="10" height="10" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                  <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>

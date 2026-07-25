@@ -1,0 +1,23 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { FaqsAccordion } from './FaqsAccordion';
+---
+
+<section id="faqs" class="bg-black py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
+  <div class="max-w-[1080px] mx-auto">
+
+    <SectionHeader
+      eyebrow="FAQ"
+      title="Preguntas frecuentes"
+      description="Resolvemos las dudas más comunes antes de que las preguntes."
+      headingId="faqs-heading"
+      class="mb-14 max-[640px]:mb-10"
+    />
+
+    <!-- The answers sit on one narrow centred column under the heading -->
+    <div class="mx-auto max-w-[760px]" data-reveal data-reveal-delay="3">
+      <FaqsAccordion client:load />
+    </div>
+
+  </div>
+</section>

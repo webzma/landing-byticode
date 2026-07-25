@@ -1,0 +1,116 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { Image } from "astro:assets";
+import wilberkImage from "../assets/members/wilberk.jpeg"
+import emmanuelImage from "../assets/members/emmanuel.jpeg"
+import danielImage from "../assets/members/daniel.jpeg"
+import juanImage from "../assets/members/juan.jpg"
+
+
+const team = [
+  {
+    name: 'Wilberk Ledezma',
+    role: 'Founder & Full-Stack Developer',
+    image: wilberkImage,
+    linkedin: '#',
+  },
+   {
+    name: 'Juan Marín',
+    role: 'UI/UX Designer & Frontend Developer',
+    image: juanImage,
+    linkedin: '#',
+  },
+  {
+    name: 'Emmanuel Heredia',
+    role: 'Frontend Developer',
+    image: emmanuelImage,
+    linkedin: '#',
+  },
+   {
+    name: 'Daniel Perdomo',
+    role: 'Backend Developer & DevOps',
+    image: danielImage,
+    linkedin: '#',
+  },
+];
+---
+
+<section id="team" class="bg-background py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
+  <div class="max-w-[1080px] mx-auto">
+
+    <SectionHeader
+      eyebrow="Equipo"
+      title="Las personas detrás de Byticode"
+      description="Un equipo pequeño, enfocado y apasionado. Construimos relaciones de largo plazo con cada cliente."
+      class="mb-16 max-[640px]:mb-10"
+    />
+
+    <div class="grid grid-cols-4 gap-5 max-[1000px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4">
+      {team.map((member, i) => (
+        <article
+          class="group relative overflow-hidden rounded-[20px] aspect-[3/4] cursor-default"
+          data-reveal
+          style={`--rd:${i * 90}ms`}
+        >
+          <!-- Photo -->
+          <Image
+            src={member.image}
+            alt={member.name}
+            class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-[filter,transform] duration-1000 ease-glide group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+          />
+
+          <!-- Dark overlay base -->
+          <div class="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/20" aria-hidden="true"></div>
+
+          <!-- Bottom gradient -->
+          <div
+            class="absolute inset-x-0 bottom-0 h-[65%]"
+            aria-hidden="true"
+            style="background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 45%, transparent 100%)"
+          ></div>
+
+          <!-- Blue accent glow on hover -->
+          <div
+            class="absolute inset-x-0 bottom-0 h-[40%] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            aria-hidden="true"
+            style="background: linear-gradient(to top, var(--glow-md) 0%, transparent 100%)"
+          ></div>
+
+          <!-- Top accent line -->
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
+
+          <!-- Content -->
+          <div class="absolute inset-x-0 bottom-0 p-6 flex items-end justify-between gap-3">
+            <div>
+              <h3 class="text-[1.0625rem] font-bold tracking-[-0.02em] text-white leading-tight mb-1">
+                {member.name}
+              </h3>
+              <p class="text-[0.8rem] font-medium m-0" style="color: var(--brand-text)">
+                {member.role}
+              </p>
+            </div>
+
+            {member.linkedin && (
+              <a
+                href={member.linkedin}
+                aria-label={`LinkedIn de ${member.name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="shrink-0 w-8 h-8 rounded-full border border-white/[0.2] bg-white/[0.08] backdrop-blur-sm flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.16] hover:border-white/30 transition-all duration-200"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect x="2" y="9" width="4" height="12"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>

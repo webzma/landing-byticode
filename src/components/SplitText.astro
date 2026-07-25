@@ -1,0 +1,71 @@
+---
+/**
+ * Splits a line into per-word or per-character spans so each unit can enter on
+ * its own beat. The split happens at build time — no client JS, no flash of
+ * unsplit text.
+ *
+ * Segments let one line carry more than one style (e.g. a brand-coloured tail)
+ * while sharing a single continuous stagger. `glue: true` on a segment joins it
+ * to the previous word without a space, for trailing punctuation.
+ *
+ * The markup is assembled as a string rather than as template nodes: an
+ * inline-block that picks up stray indentation from the template would carry
+ * that whitespace into the rendered line.
+ */
+interface Segment {
+  text: string;
+  class?: string;
+  glue?: boolean;
+}
+
+interface Props {
+  segments: Segment[];
+  mode?: "word" | "char";
+  /** Seconds before the first unit moves. */
+  delay?: number;
+  class?: string;
+}
+
+const {
+  segments,
+  mode = "word",
+  delay,
+  class: className,
+} = Astro.props as Props;
+
+const escape = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+let unit = 0;
+let first = true;
+const pieces: string[] = [];
+
+for (const seg of segments) {
+  const words = seg.text.split(/\s+/).filter(Boolean);
+  const segClass = seg.class ? ` ${seg.class}` : "";
+
+  words.forEach((word, wi) => {
+    if (!first && !(wi === 0 && seg.glue)) pieces.push(" ");
+    first = false;
+
+    if (mode === "word") {
+      pieces.push(
+        `<span class="anim-word${segClass}" style="--i:${unit}">${escape(word)}</span>`
+      );
+      unit += 1;
+    } else {
+      const chars = [...word]
+        .map((char) => `<span class="anim-char" style="--i:${unit++}">${escape(char)}</span>`)
+        .join("");
+      pieces.push(`<span class="anim-nowrap${segClass}">${chars}</span>`);
+    }
+  });
+}
+
+const baseDelay = delay ?? (mode === "char" ? 0.5 : 0.15);
+---
+
+<span class={className} style={`--d:${baseDelay}s`} set:html={pieces.join("")} />

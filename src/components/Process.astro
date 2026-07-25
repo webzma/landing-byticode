@@ -1,0 +1,86 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const steps = [
+  {
+    number: '01',
+    title: 'Descubrimiento',
+    description: 'Entendemos tu negocio, objetivos y audiencia para definir la estrategia correcta.',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>`,
+  },
+  {
+    number: '02',
+    title: 'Diseño',
+    description: 'Creamos wireframes y prototipos que validan la experiencia antes de construir.',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>`,
+  },
+  {
+    number: '03',
+    title: 'Desarrollo',
+    description: 'Codificamos con tecnologías modernas, rendimiento óptimo y buenas prácticas.',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+  },
+  {
+    number: '04',
+    title: 'Lanzamiento',
+    description: 'Desplegamos, optimizamos el rendimiento y te acompañamos en el crecimiento.',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`,
+  },
+];
+---
+
+<section id="process" class="bg-black py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
+  <div class="max-w-[1080px] mx-auto">
+
+    <SectionHeader
+      eyebrow="Proceso"
+      title="Cómo trabajamos"
+      description="Un proceso transparente e iterativo para que estés involucrado en cada etapa."
+      class="mb-16 max-[640px]:mb-10"
+    />
+
+    <!-- A hairline rail runs behind the row so the four steps read in sequence -->
+    <div class="relative">
+      <div
+        class="pointer-events-none absolute inset-x-[12%] top-[3.25rem] h-px max-[1000px]:hidden"
+        aria-hidden="true"
+        style="background: linear-gradient(to right, transparent, var(--hairline-strong) 15%, var(--hairline-strong) 85%, transparent)">
+      </div>
+
+    <ol class="relative grid grid-cols-4 gap-5 list-none m-0 p-0 max-[1000px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4">
+      {steps.map((step, i) => (
+        <li
+          class="group relative flex flex-col p-7 bg-white/[0.03] border border-white/[0.08] rounded-[16px] overflow-hidden transition-[background-color,border-color,transform] duration-500 ease-soft hover:bg-white/[0.06] hover:border-white/[0.16] hover:-translate-y-1"
+          data-reveal
+          style={`--rd:${i * 110}ms`}
+        >
+          <!-- Radial glow on hover -->
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" aria-hidden="true" style="background: radial-gradient(ellipse at top left, var(--glow-xs) 0%, transparent 65%)"></div>
+
+          <!-- Top accent line on hover -->
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-text)] to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-500" aria-hidden="true"></div>
+
+          <div class="relative z-10 flex flex-col flex-1">
+            <!-- Icon + step number row -->
+            <div class="flex items-center justify-between mb-6">
+              <div
+                class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
+                style="background: var(--brand-icon-bg); border: 1px solid var(--brand-icon-border); color: var(--brand-icon-color)"
+              >
+                <Fragment set:html={step.icon} />
+              </div>
+              <span class="text-[0.7rem] font-bold tracking-widest font-['Courier_New',monospace]" style="color: var(--brand-text)" aria-hidden="true">
+                {step.number}
+              </span>
+            </div>
+
+            <h3 class="text-[1rem] font-bold tracking-[-0.02em] text-white mb-2.5">{step.title}</h3>
+            <p class="text-[0.875rem] leading-[1.65] text-white/50 m-0">{step.description}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,57 @@
+---
+/**
+ * The repeating section opener: eyebrow pill, headline, supporting line —
+ * stacked and centred on one narrow column, each part on its own beat.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  headingId?: string;
+  /** Constrains the headline measure. */
+  titleWidth?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  headingId,
+  titleWidth = "18ch",
+  class: className = "",
+} = Astro.props as Props;
+---
+
+<div
+  class:list={[
+    "mx-auto flex max-w-[680px] flex-col items-center text-center",
+    className,
+  ]}>
+  <div
+    class="inline-flex items-center gap-2 rounded-full border border-white/[0.15] bg-white/[0.04] px-[0.875rem] py-[0.375rem] text-[0.8125rem] text-white/60"
+    data-reveal="soft">
+    <span class="h-[5px] w-[5px] rounded-full bg-accent" aria-hidden="true"></span>
+    {eyebrow}
+  </div>
+
+  <h2
+    id={headingId}
+    class="mt-6 mb-0 font-sans text-[clamp(1.875rem,3.5vw,3rem)] font-extrabold leading-[1.1] tracking-[-0.03em] text-balance text-white"
+    style={`max-width:${titleWidth}`}
+    data-reveal
+    data-reveal-delay="1">
+    {title}
+  </h2>
+
+  {
+    description && (
+      <p
+        class="m-0 mt-4 max-w-[46ch] text-[clamp(0.9375rem,1.3vw,1.0625rem)] leading-[1.65] text-white/55"
+        data-reveal
+        data-reveal-delay="2">
+        {description}
+      </p>
+    )
+  }
+</div>

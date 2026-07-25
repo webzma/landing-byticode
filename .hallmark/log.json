@@ -1,0 +1,15 @@
+[
+  {
+    "date": "2026-07-24",
+    "macrostructure": "Split Studio",
+    "genre": "modern-minimal",
+    "theme": "project system (dark blue-tinted · DM Sans + system mono · accent oklch(0.68 0.18 245))",
+    "theme_axes": "dark / grotesk-sans / cool",
+    "hero": "H2 Split diptych — ratio=7/5, right-side=proof column, divider=vertical rule",
+    "nav": "pre-existing (out of scope)",
+    "footer": "pre-existing (out of scope)",
+    "enrichment": "none — typography + hairline structure (Tier-A canvas: 2-stop gradient + feTurbulence grain)",
+    "scope": "hero section only",
+    "brief": "Byticode · agencia de diseño y desarrollo de software — mejora del hero"
+  }
+]

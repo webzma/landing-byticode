@@ -1,0 +1,101 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const services = [
+  {
+    title: 'Web & Apps',
+    description: 'Sitios web rápidos, apps móviles y experiencias digitales que convierten.',
+    detail: 'UI/UX · Desarrollo · Optimización',
+    icon: 'globe',
+    /* The flagship card takes the full width of the bento's first row. */
+    wide: true,
+  },
+  {
+    title: 'Branding & Design',
+    description: 'Identidad visual, logos minimales y diseño que transmite tu esencia de marca.',
+    detail: 'Logotipo · Sistema de diseño · Guía de marca',
+    icon: 'palette',
+    wide: false,
+  },
+  {
+    title: 'Consultoría',
+    description: 'Estrategia técnica y roadmap para escalar tu producto digital al siguiente nivel.',
+    detail: 'Auditoría · Estrategia · Roadmap',
+    icon: 'lightbulb',
+    wide: false,
+  },
+];
+---
+
+<section id="services" class="bg-black py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
+  <div class="max-w-[1080px] mx-auto">
+
+    <SectionHeader
+      eyebrow="Servicios"
+      title="Lo que hacemos"
+      description="Creamos soluciones digitales a medida para empresas que quieren destacar en el mundo digital."
+      class="mb-16 max-[640px]:mb-10"
+    />
+
+    <div class="grid grid-cols-2 gap-5 max-[760px]:grid-cols-1 max-[640px]:gap-4">
+      {services.map((s, i) => (
+        <article
+          class:list={[
+            "group relative flex flex-col overflow-hidden rounded-[20px] border border-white/[0.1] bg-white/[0.04] p-8 transition-[background-color,border-color,transform] duration-500 ease-soft hover:-translate-y-1 hover:border-white/[0.18] hover:bg-white/[0.07] max-[640px]:p-7",
+            s.wide && "col-span-2 max-[760px]:col-span-1",
+          ]}
+          data-reveal
+          style={`--rd:${i * 90}ms`}
+        >
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-soft pointer-events-none" aria-hidden="true" style="background: radial-gradient(ellipse at top left, var(--glow-sm) 0%, transparent 65%)"></div>
+
+          <div class:list={["relative z-10 flex flex-1 flex-col", s.wide && "max-w-[52ch]"]}>
+            <div class="w-10 h-10 rounded-[10px] flex items-center justify-center mb-6 shrink-0 transition-transform duration-500 ease-soft group-hover:-translate-y-0.5" style="background: var(--brand-icon-bg); border: 1px solid var(--brand-icon-border); color: var(--brand-icon-color)">
+              {s.icon === 'globe' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              )}
+              {s.icon === 'palette' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/>
+                  <circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/>
+                  <circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/>
+                  <circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/>
+                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.648 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.555C21.965 6.012 17.461 2 12 2z"/>
+                </svg>
+              )}
+              {s.icon === 'lightbulb' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                  <path d="M9 18h6"/>
+                  <path d="M10 22h4"/>
+                </svg>
+              )}
+            </div>
+
+            <h3 class:list={[
+              "font-bold tracking-[-0.02em] text-white mb-2",
+              s.wide ? "text-[1.375rem] max-[640px]:text-[1.125rem]" : "text-[1.0625rem]",
+            ]}>{s.title}</h3>
+            <p class:list={[
+              "leading-[1.65] text-white/55 mb-6 flex-1",
+              s.wide ? "text-[1rem] max-[640px]:text-[0.9375rem]" : "text-[0.9375rem]",
+            ]}>{s.description}</p>
+
+            <div class="mt-auto flex items-center justify-between pt-5 border-t border-white/[0.07]">
+              <span class="text-[0.75rem] text-white/30 tracking-[0.01em]">{s.detail}</span>
+              <a href="#contact" aria-label={`Contratar ${s.title}`} class="w-6 h-6 rounded-full border border-white/[0.14] flex items-center justify-center text-white/35 transition-[color,border-color,transform] duration-300 ease-soft group-hover:translate-x-0.5 group-hover:text-white/65 group-hover:border-white/25">
+                <svg width="10" height="10" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                  <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>

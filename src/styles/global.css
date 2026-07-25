@@ -1,0 +1,416 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S4 R5 V5
+ * genre: modern-minimal · macrostructure: Split Studio · hero: H2 Split diptych
+ *   H2 knobs: ratio=7/5 · right-side=proof column · divider=vertical rule
+ * theme: project system (dark blue-tinted paper · DM Sans display+body · mono micro-labels
+ *   · accent oklch(0.68 0.18 245))
+ * enrichment: none — typography + hairline structure
+ *   (Tier-A canvas: 2-stop gradient + feTurbulence grain)
+ * scope: hero section only · nav + footer untouched
+ * tone: technical · confident · restrained
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Typography */
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  /* Hairline + brand-ink utilities (border-hairline, text-brand) */
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-brand: var(--brand-text);
+  /* Custom animations */
+  --animate-pulse-dot: pulse-dot 2.2s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 26s linear infinite;
+  --animate-orbit-dot: orbit-dot 10s linear infinite;
+  --animate-orbit-dot-reverse: orbit-dot-reverse 16s linear infinite;
+  /* Motion curves — long, soft-landing eases. Everything on the page moves on
+     one of these three; nothing uses a browser default. */
+  --ease-soft: cubic-bezier(0.12, 0.23, 0.17, 0.99);
+  --ease-glide: cubic-bezier(0.12, 0.23, 0.5, 1);
+  --ease-swift: cubic-bezier(0.35, 0, 0, 1);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.07 0.01 240);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.12 0.02 245);
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.12 0.02 245);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.16 0.025 245);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: oklch(0.16 0.025 245);
+  --muted-foreground: oklch(0.65 0.01 240);
+  --accent: oklch(0.45 0.19 245);
+  --accent-foreground: oklch(0.97 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.55 0.05 245);
+  --chart-1: oklch(0.488 0.243 245);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 285);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.12 0.02 245);
+  --sidebar-foreground: oklch(0.97 0 0);
+  --sidebar-primary: oklch(0.55 0.22 245);
+  --sidebar-primary-foreground: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.16 0.025 245);
+  --sidebar-accent-foreground: oklch(0.97 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.55 0.05 245);
+  /* Glow layers — decorative backgrounds and shadow effects */
+  --glow-xs: oklch(0.42 0.22 245 / 8%);
+  --glow-sm: oklch(0.42 0.22 245 / 18%);
+  --glow-md: oklch(0.42 0.22 245 / 28%);
+  --glow-lg: oklch(0.42 0.22 245 / 38%);
+  --glow-xl: oklch(0.42 0.22 245 / 45%);
+  --glow-2xl: oklch(0.42 0.22 245 / 55%);
+  --glow-3xl: oklch(0.65 0.2 245 / 70%);
+  /* Brand icon box colors */
+  --brand-icon-bg: oklch(0.38 0.2 245 / 22%);
+  --brand-icon-border: oklch(0.5 0.2 245 / 28%);
+  --brand-icon-color: oklch(0.72 0.18 245);
+  --brand-text: oklch(0.68 0.18 245);
+  /* Status indicator */
+  --status-online: #22c55e;
+  /* Hairlines — the hero's only divider language */
+  --hairline: oklch(1 0 0 / 9%);
+  --hairline-strong: oklch(1 0 0 / 16%);
+  /* Hero canvas — two-stop tinted descent that lands on the black of the next
+     section, so the seam disappears. No saturated flood, no aurora blobs. */
+  --hero-gradient: linear-gradient(
+    180deg,
+    oklch(0.13 0.045 252) 0%,
+    oklch(0.1 0.032 250) 30%,
+    oklch(0.07 0.018 247) 62%,
+    oklch(0.03 0.006 245) 86%,
+    oklch(0 0 0) 100%
+  );
+  /* Single edge-anchored light source, upper-left — behind the headline */
+  --hero-veil: radial-gradient(
+    92% 72% at 6% 0%,
+    oklch(0.45 0.19 245 / 24%) 0%,
+    transparent 62%
+  );
+  /* Film grain — kills the synthetic flatness of a pure CSS gradient */
+  --hero-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  /* The header is fixed — anchored sections must clear it */
+  :where([id]) {
+    scroll-margin-top: 6rem;
+  }
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    /* clip, not hidden — hidden silently breaks position:sticky descendants */
+    overflow-x: clip;
+    font-family: var(--font-sans);
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* Visible keyboard focus ring for all interactive elements */
+  :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--brand-text);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-dot {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-dot-reverse {
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(-180deg);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Scroll reveal
+   One transition vocabulary for the whole page: elements rise 40px out of a
+   10px blur over a full second. `--rd` carries the per-element stagger, set
+   inline so any index can drive it.
+   ───────────────────────────────────────────────────────────────────────── */
+[data-reveal] {
+  opacity: 0.001;
+  transform: translateY(40px);
+  filter: blur(10px);
+  transition: opacity 1s var(--ease-soft) var(--rd, 0ms),
+    transform 1s var(--ease-soft) var(--rd, 0ms),
+    filter 1s var(--ease-soft) var(--rd, 0ms);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  /* `none`, not `blur(0)` — a lingering filter would keep every revealed
+     section on its own compositing layer for the rest of the session */
+  filter: none;
+}
+
+/* Shorter rise for dense stacks (list rows, nav columns, small type) */
+[data-reveal="soft"] {
+  transform: translateY(20px);
+  filter: blur(4px);
+  transition-duration: 0.8s;
+}
+
+/* Panels and imagery settle out of a 5% overscale instead of rising */
+[data-reveal="zoom"] {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: none;
+  transition-duration: 2s;
+  transition-timing-function: var(--ease-glide);
+}
+
+/* Opacity only — for anything already anchored in place */
+[data-reveal="fade"] {
+  transform: none;
+  filter: none;
+}
+
+/* Legacy numeric stagger, kept so existing markup keeps working */
+[data-reveal-delay="1"] { --rd: 90ms; }
+[data-reveal-delay="2"] { --rd: 180ms; }
+[data-reveal-delay="3"] { --rd: 270ms; }
+[data-reveal-delay="4"] { --rd: 360ms; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Load-time entrance — hero only. These run on paint, not on intersection,
+   so the fold is never blank waiting for an observer.
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes rise-in {
+  from {
+    opacity: 0.001;
+    transform: translateY(40px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0.001;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes char-in {
+  from {
+    opacity: 0.001;
+    transform: translateY(20px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.anim-rise {
+  animation: rise-in 1.2s var(--ease-soft) both;
+  animation-delay: var(--d, 0s);
+}
+
+.anim-zoom {
+  animation: zoom-in 2s var(--ease-glide) both;
+  animation-delay: var(--d, 0s);
+}
+
+.anim-word {
+  display: inline-block;
+  animation: word-in 0.9s var(--ease-soft) both;
+  animation-delay: calc(var(--d, 0.15s) + var(--i) * 0.05s);
+}
+
+.anim-char {
+  display: inline-block;
+  animation: char-in 0.8s var(--ease-soft) both;
+  animation-delay: calc(var(--d, 0.5s) + var(--i) * 0.012s);
+}
+
+/* Keeps a character-split word from breaking mid-word at a line end */
+.anim-nowrap {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Scroll to top button */
+#scroll-top {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.4s var(--ease-soft), transform 0.4s var(--ease-soft);
+}
+#scroll-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Header scroll state — solidifies for legibility once the page scrolls */
+#site-header {
+  transition: background-color 0.4s var(--ease-soft),
+    border-color 0.4s var(--ease-soft), box-shadow 0.4s var(--ease-soft);
+  border-bottom: 1px solid transparent;
+}
+#site-header.scrolled {
+  background: oklch(0.07 0.01 240 / 72%);
+  border-bottom-color: oklch(1 0 0 / 8%);
+  box-shadow: 0 8px 30px -12px oklch(0 0 0 / 60%);
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .anim-rise,
+  .anim-zoom,
+  .anim-word,
+  .anim-char {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

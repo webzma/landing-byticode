@@ -1,0 +1,97 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" href="/favicon.ico" />
+
+		<!-- SEO -->
+		<meta name="description" content="Byticode — Agencia de diseño y desarrollo de software. Creamos sitios web rápidos, apps y experiencias digitales que impulsan tu negocio." />
+		<meta name="robots" content="index, follow" />
+
+		<!-- Open Graph -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Byticode" />
+		<meta property="og:title" content="Byticode | Diseño y Desarrollo de Software" />
+		<meta property="og:description" content="Creamos sitios web rápidos, apps y experiencias digitales que impulsan tu negocio." />
+		<meta property="og:locale" content="es_ES" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Byticode | Diseño y Desarrollo de Software" />
+		<meta name="twitter:description" content="Creamos sitios web rápidos, apps y experiencias digitales que impulsan tu negocio." />
+
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap"
+			rel="stylesheet"
+		/>
+
+		<meta name="generator" content={Astro.generator} />
+		<title>Byticode | Diseño y Desarrollo de Software</title>
+
+		<!-- Reveals start hidden and are released by an observer. Without JS there
+		     is no observer, so the page has to opt out of the whole system. -->
+		<noscript>
+			<style>
+				[data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; }
+				.anim-rise, .anim-zoom, .anim-word, .anim-char {
+					animation: none !important; opacity: 1 !important;
+					transform: none !important; filter: none !important;
+				}
+			</style>
+		</noscript>
+
+		<!-- JSON-LD -->
+		<script is:inline type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Organization",
+			"name": "Byticode",
+			"description": "Agencia de diseño y desarrollo de software. Creamos sitios web rápidos, apps y experiencias digitales.",
+			"email": "hola@byticode.com",
+			"knowsAbout": ["Desarrollo web", "Diseño UI/UX", "Branding", "Consultoría tecnológica"]
+		})} />
+	</head>
+	<body>
+		<slot />
+
+		<!-- Scroll to top -->
+		<button
+			id="scroll-top"
+			aria-label="Volver arriba"
+			class="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-white/8 border border-white/15 text-white/50 flex items-center justify-center backdrop-blur-sm hover:bg-white/15 hover:text-white transition-colors duration-200 cursor-pointer"
+		>
+			<svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+				<path d="M7.5 12V3M3.5 7l4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+
+		<script>
+			// Scroll reveal — fires a little before the element is fully in frame so
+			// the one-second rise has room to finish while it's still travelling up.
+			const io = new IntersectionObserver(
+				(entries) => entries.forEach(e => {
+					if (e.isIntersecting) {
+						e.target.classList.add('is-visible');
+						io.unobserve(e.target);
+					}
+				}),
+				{ threshold: 0.05, rootMargin: '0px 0px -6% 0px' }
+			);
+			document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+			// Scroll to top
+			const btn = document.getElementById('scroll-top');
+			window.addEventListener('scroll', () => {
+				btn?.classList.toggle('visible', window.scrollY > 320);
+			});
+			btn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+		</script>
+	</body>
+</html>

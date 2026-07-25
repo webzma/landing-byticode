@@ -1,0 +1,181 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const plans = [
+  {
+    name: 'Esencial',
+    price: '$499',
+    period: 'USD / proyecto',
+    description: 'Ideal para emprendedores y pequeños negocios que necesitan presencia digital rápida y profesional.',
+    features: [
+      'Landing page o sitio vitrina',
+      'Diseño UI/UX personalizado',
+      'Responsive para todos los dispositivos',
+      'SEO básico on-page',
+      'Formulario de contacto',
+      '1 ronda de revisiones',
+      'Entrega en ~2 semanas',
+    ],
+    cta: 'Empezar proyecto',
+    featured: false,
+  },
+  {
+    name: 'Pro',
+    price: '$1,499',
+    period: 'USD / proyecto',
+    description: 'Para negocios que quieren una solución completa: diseño avanzado, backend robusto e integraciones.',
+    features: [
+      'Sitio web completo o app web',
+      'Diseño UI/UX avanzado',
+      'Backend + base de datos',
+      'Integraciones (APIs, CRM, pagos)',
+      'SEO técnico + rendimiento',
+      '3 rondas de revisiones',
+      '1 mes de soporte post-lanzamiento',
+    ],
+    cta: 'Empezar proyecto',
+    featured: true,
+  },
+  {
+    name: 'A medida',
+    price: 'Custom',
+    period: 'hablemos primero',
+    description: 'Para proyectos ambiciosos: plataformas SaaS, apps móviles, sistemas complejos o consultoría estratégica.',
+    features: [
+      'Arquitectura y tecnología a medida',
+      'Plataformas SaaS o apps móviles',
+      'Equipo dedicado y escalable',
+      'Consultoría técnica y estratégica',
+      'Revisiones ilimitadas',
+      'Soporte y mantenimiento continuo',
+      'Roadmap y acompañamiento completo',
+    ],
+    cta: 'Conversemos',
+    featured: false,
+  },
+];
+---
+
+<section id="pricing" class="bg-black py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
+  <div class="max-w-[1080px] mx-auto">
+
+    <SectionHeader
+      eyebrow="Planes"
+      title="Inversión clara, resultados reales"
+      description="Sin costos ocultos ni sorpresas. Elige el plan que mejor se adapta a tu etapa y objetivos."
+      class="mb-16 max-[640px]:mb-10"
+    />
+
+    <div class="grid grid-cols-3 gap-5 items-start max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4">
+      {plans.map((plan, i) => (
+        <article
+          class:list={[
+            "group relative flex flex-col rounded-[20px] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-soft",
+            plan.featured
+              ? "border border-accent/40 bg-white/[0.05] shadow-[0_0_60px_-10px_var(--glow-md)] scale-[1.02] max-[1100px]:order-first max-[640px]:scale-100"
+              : "border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.05] hover:border-white/[0.18]",
+          ]}
+          data-reveal
+          style={`--rd:${i * 90}ms`}
+        >
+          <!-- Featured glow -->
+          {plan.featured && (
+            <div
+              class="absolute inset-0 pointer-events-none"
+              aria-hidden="true"
+              style="background: radial-gradient(ellipse at top, var(--glow-sm) 0%, transparent 65%)"
+            ></div>
+          )}
+
+          <!-- Top line accent for featured -->
+          {plan.featured && (
+            <div
+              class="absolute inset-x-0 top-0 h-px"
+              aria-hidden="true"
+              style="background: linear-gradient(to right, transparent, var(--brand-text), transparent)"
+            ></div>
+          )}
+
+          <!-- Non-featured subtle hover glow -->
+          {!plan.featured && (
+            <div
+              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              aria-hidden="true"
+              style="background: radial-gradient(ellipse at top left, var(--glow-xs) 0%, transparent 65%)"
+            ></div>
+          )}
+
+          <div class="relative z-10 p-7 flex flex-col flex-1">
+
+            <!-- Header -->
+            <div class="mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-[0.9375rem] font-bold tracking-[-0.01em] text-white">{plan.name}</h3>
+                {plan.featured && (
+                  <span
+                    class="text-[0.6875rem] font-semibold px-2.5 py-1 rounded-full tracking-[0.04em] uppercase"
+                    style="background: var(--brand-icon-bg); border: 1px solid var(--brand-icon-border); color: var(--brand-text)"
+                  >
+                    Popular
+                  </span>
+                )}
+              </div>
+
+              <div class="flex items-baseline gap-1.5 mb-3">
+                <span class="text-[2.25rem] font-extrabold tracking-[-0.04em] text-white leading-none">{plan.price}</span>
+                <span class="text-[0.8rem] text-white/35 leading-tight">{plan.period}</span>
+              </div>
+
+              <p class="text-[0.875rem] leading-[1.6] text-white/50 m-0">{plan.description}</p>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-px bg-white/[0.07] mb-6"></div>
+
+            <!-- Features -->
+            <ul class="flex flex-col gap-3 mb-8 flex-1 list-none p-0 m-0">
+              {plan.features.map((feature) => (
+                <li class="flex items-start gap-2.5 text-[0.875rem] text-white/60">
+                  <span
+                    class="shrink-0 mt-[2px] w-[16px] h-[16px] rounded-full flex items-center justify-center"
+                    style={plan.featured
+                      ? "background: var(--brand-icon-bg); color: var(--brand-text)"
+                      : "background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35)"}
+                    aria-hidden="true"
+                  >
+                    <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                      <path d="M1.5 5l2.5 2.5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <!-- CTA -->
+            <a
+              href="#contact"
+              class:list={[
+                "relative w-full py-3 px-5 rounded-[10px] text-[0.9375rem] font-semibold text-center transition-all duration-200 no-underline overflow-hidden",
+                plan.featured
+                  ? "text-white border border-accent/50 hover:border-accent hover:shadow-[0_0_24px_-4px_var(--glow-md)]"
+                  : "text-white/70 border border-white/[0.1] hover:text-white hover:bg-white/[0.06] hover:border-white/[0.2]",
+              ]}
+              style={plan.featured ? "background: linear-gradient(135deg, oklch(0.35 0.2 245) 0%, oklch(0.28 0.18 245) 100%)" : ""}
+            >
+              {plan.cta}
+            </a>
+
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Footer note -->
+    <p class="text-center text-[0.8125rem] text-white/30 mt-10 m-0" data-reveal="soft">
+      Todos los proyectos incluyen código limpio, documentación y transferencia completa de activos.
+      <a href="#contact" class="text-white/45 hover:text-white underline underline-offset-2 transition-colors duration-200 ml-1">¿Dudas? Hablemos.</a>
+    </p>
+
+  </div>
+</section>

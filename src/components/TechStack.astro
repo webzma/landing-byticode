@@ -1,0 +1,90 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SupabaseIcon from '../assets/icons/supabase.astro';
+import ReactIcon from "../assets/icons/react.astro"
+import NextIcon from "../assets/icons/next.astro"
+import TypescriptIcon from "../assets/icons/typescript.astro"
+import AstroaIcon from '@/assets/icons/astroa.astro';
+import TailwindIcon from '@/assets/icons/tailwind.astro';
+import FastapiIcon from '@/assets/icons/fastapi.astro';
+import LaravelIcon from '@/assets/icons/laravel.astro';
+import MysqlIcon from '@/assets/icons/mysql.astro';
+import PostgresIcon from '@/assets/icons/postgres.astro';
+import NodeIcon from '@/assets/icons/node.astro';
+
+
+const techs = [
+  { name: 'React',      icon: ReactIcon },
+  { name: 'Next.js',    icon: NextIcon },
+  { name: 'TypeScript', icon: TypescriptIcon },
+  { name: 'Astro',      icon: AstroaIcon },
+  { name: 'Tailwind',   icon: TailwindIcon },
+  { name: 'Node.js',    icon: NodeIcon },
+  { name: 'FastAPI',    icon: FastapiIcon },
+  { name: 'Laravel',    icon: LaravelIcon },
+  { name: 'MySQL',      icon: MysqlIcon },
+  { name: 'Postgres',   icon: PostgresIcon },
+  { name: 'Supabase',   icon: SupabaseIcon },
+];
+
+/* Two counter-drifting rows read as a moving surface rather than a ticker.
+   Both rows carry the full list — the second one rotated — so each half of each
+   track is wider than any viewport and the -50% loop never exposes an edge. */
+const offset = Math.ceil(techs.length / 2);
+const rows = [techs, [...techs.slice(offset), ...techs.slice(0, offset)]];
+---
+
+<section class="bg-black py-28 max-[900px]:py-20 max-[640px]:py-16 overflow-hidden">
+
+  <SectionHeader
+    eyebrow="Stack"
+    title="Tecnologías que usamos"
+    class="mb-14 px-6 max-[640px]:mb-10 max-[640px]:px-5"
+  />
+
+  <!-- Marquee container with edge fades -->
+  <div class="relative flex flex-col gap-4" data-reveal data-reveal-delay="2">
+    <!-- fade edges -->
+    <div class="pointer-events-none absolute inset-y-0 left-0 w-32 z-10 bg-linear-to-r from-black to-transparent" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-y-0 right-0 w-32 z-10 bg-linear-to-l from-black to-transparent" aria-hidden="true"></div>
+
+    {rows.map((row, ri) => (
+      <div class={`marquee-track flex gap-4 ${ri === 1 ? 'marquee-track--reverse' : ''}`}>
+        {/* duplicated for seamless loop */}
+        {[...row, ...row].map((t) => (
+          <div class="marquee-item shrink-0 flex items-center gap-3 px-5 py-3 bg-white/4 border border-white/10 rounded-2xl text-white/50 hover:text-white hover:bg-white/7 hover:border-white/20 transition-[color,background-color,border-color] duration-300 ease-soft cursor-default group">
+            <t.icon class="size-10 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300 ease-soft" />
+            <span class="text-xl font-medium tracking-wide whitespace-nowrap">{t.name}</span>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+</section>
+
+<style>
+  .marquee-track {
+    width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+
+  .marquee-track--reverse {
+    animation-name: marquee-reverse;
+    animation-duration: 34s;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-reverse {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+</style>
