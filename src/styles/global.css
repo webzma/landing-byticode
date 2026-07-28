@@ -178,9 +178,9 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html {
-    scroll-behavior: smooth;
-  }
+  /* No `scroll-behavior: smooth` — anchor travel is a GSAP ScrollTo tween
+     (motion.ts), and the two cannot share the scroll position. The property
+     is restored below for anyone the motion layer never reaches. */
   /* The header is fixed — anchored sections must clear it */
   :where([id]) {
     scroll-margin-top: 6rem;
@@ -244,73 +244,110 @@
   }
 }
 
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes marquee-reverse {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
+/* The marquee keyframes that used to live here are gone: both rails (client
+   roster, stack rows) now travel on GSAP so they can answer the scroll. */
 
 /* ─────────────────────────────────────────────────────────────────────────
    Scroll reveal
-   One transition vocabulary for the whole page: elements rise 40px out of a
-   10px blur over a full second. `--rd` carries the per-element stagger, set
-   inline so any index can drive it.
+   The stylesheet owns the *state* — elements sit 40px low, under a 10px blur,
+   until they are released. GSAP owns the *travel*: it animates them in from
+   here and adds `.is-visible` when it lands (motion.ts, reveals()).
+
+   These rules are layered so a card's own Tailwind utilities still win —
+   `transform: none` below would otherwise outrank `hover:-translate-y-1` and
+   kill the lift on every card that also reveals.
    ───────────────────────────────────────────────────────────────────────── */
-[data-reveal] {
-  opacity: 0.001;
-  transform: translateY(40px);
-  filter: blur(10px);
-  transition: opacity 1s var(--ease-soft) var(--rd, 0ms),
-    transform 1s var(--ease-soft) var(--rd, 0ms),
-    filter 1s var(--ease-soft) var(--rd, 0ms);
-}
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-  /* `none`, not `blur(0)` — a lingering filter would keep every revealed
-     section on its own compositing layer for the rest of the session */
-  filter: none;
+@layer components {
+  [data-reveal] {
+    opacity: 0.001;
+    transform: translateY(40px);
+    filter: blur(10px);
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+    /* `none`, not `blur(0)` — a lingering filter would keep every revealed
+       section on its own compositing layer for the rest of the session */
+    filter: none;
+  }
+
+  /* Shorter rise for dense stacks (list rows, nav columns, small type) */
+  [data-reveal="soft"] {
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+
+  /* Panels and imagery settle out of a 5% overscale instead of rising */
+  [data-reveal="zoom"] {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: none;
+  }
+
+  /* Opacity only — for anything already anchored in place */
+  [data-reveal="fade"] {
+    transform: none;
+    filter: none;
+  }
+
+  /* Split headlines are cut into masked lines at runtime. Hidden until then,
+     so the unsplit block never flashes in ahead of its own animation. */
+  .js-motion [data-split] {
+    visibility: hidden;
+  }
+
+  /* ── Without the motion layer ──
+     `.js-motion` goes on before first paint, so its absence means scripts are
+     off; `.motion-failed` means the bundle never reported in (blocked, stale
+     cache, parse error). Either way the page shows itself, on a transition
+     rather than a jump cut, and hands anchors back to the browser. */
+  html:not(.js-motion),
+  html.motion-failed {
+    scroll-behavior: smooth;
+  }
+
+  html:not(.js-motion) [data-reveal],
+  html.motion-failed [data-reveal] {
+    transition: opacity 1s var(--ease-soft) var(--rd, 0ms),
+      transform 1s var(--ease-soft) var(--rd, 0ms),
+      filter 1s var(--ease-soft) var(--rd, 0ms);
+  }
+
+  .motion-failed [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .motion-failed [data-split] {
+    visibility: visible;
+  }
+
+  /* Legacy numeric stagger — still drives the fallback transition above */
+  [data-reveal-delay="1"] { --rd: 90ms; }
+  [data-reveal-delay="2"] { --rd: 180ms; }
+  [data-reveal-delay="3"] { --rd: 270ms; }
+  [data-reveal-delay="4"] { --rd: 360ms; }
 }
 
-/* Shorter rise for dense stacks (list rows, nav columns, small type) */
-[data-reveal="soft"] {
-  transform: translateY(20px);
-  filter: blur(4px);
-  transition-duration: 0.8s;
+/* ─────────────────────────────────────────────────────────────────────────
+   Reading progress — a single hairline of brand ink across the top edge,
+   scaled by GSAP against total document height.
+   ───────────────────────────────────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--brand-text) 55%,
+    oklch(0.86 0.09 250) 100%
+  );
+  pointer-events: none;
 }
-
-/* Panels and imagery settle out of a 5% overscale instead of rising */
-[data-reveal="zoom"] {
-  opacity: 1;
-  transform: scale(1.05);
-  filter: none;
-  transition-duration: 2s;
-  transition-timing-function: var(--ease-glide);
-}
-
-/* Opacity only — for anything already anchored in place */
-[data-reveal="fade"] {
-  transform: none;
-  filter: none;
-}
-
-/* Legacy numeric stagger, kept so existing markup keeps working */
-[data-reveal-delay="1"] { --rd: 90ms; }
-[data-reveal-delay="2"] { --rd: 180ms; }
-[data-reveal-delay="3"] { --rd: 270ms; }
-[data-reveal-delay="4"] { --rd: 360ms; }
 
 /* ─────────────────────────────────────────────────────────────────────────
    Load-time entrance — hero only. These run on paint, not on intersection,
@@ -433,6 +470,14 @@
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+  }
+  /* motion.ts sits out entirely under this preference, so the split never
+     happens — the headline has to show itself. */
+  [data-split] {
+    visibility: visible !important;
+  }
+  #scroll-progress {
+    display: none;
   }
   .anim-rise,
   .anim-zoom,

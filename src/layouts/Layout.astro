@@ -36,17 +36,31 @@ import "../styles/global.css";
 		<meta name="generator" content={Astro.generator} />
 		<title>Byticode | Diseño y Desarrollo de Software</title>
 
-		<!-- Reveals start hidden and are released by an observer. Without JS there
-		     is no observer, so the page has to opt out of the whole system. -->
+		<!-- Reveals start hidden and are released by GSAP. Without JS nothing
+		     releases them, so the page has to opt out of the whole system. -->
 		<noscript>
 			<style>
 				[data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; }
+				[data-split] { visibility: visible !important; }
 				.anim-rise, .anim-zoom, .anim-word, .anim-char {
 					animation: none !important; opacity: 1 !important;
 					transform: none !important; filter: none !important;
 				}
 			</style>
 		</noscript>
+
+		<!-- Runs before first paint: hands the reveal system to GSAP by cutting
+		     the CSS transitions it would otherwise fight over. The timer is the
+		     failsafe — if the motion bundle never arrives (blocked, stale cache,
+		     parse error), the page shows itself rather than staying blank. -->
+		<script is:inline>
+			document.documentElement.classList.add("js-motion");
+			setTimeout(function () {
+				if (!document.documentElement.hasAttribute("data-motion-ready")) {
+					document.documentElement.classList.add("motion-failed");
+				}
+			}, 4000);
+		</script>
 
 		<!-- JSON-LD -->
 		<script is:inline type="application/ld+json" set:html={JSON.stringify({
@@ -59,6 +73,10 @@ import "../styles/global.css";
 		})} />
 	</head>
 	<body>
+		<!-- Reading progress — the only element on the page tied to absolute
+		     scroll position, so it doubles as the page's length indicator -->
+		<div id="scroll-progress" aria-hidden="true"></div>
+
 		<slot />
 
 		<!-- Scroll to top -->
@@ -72,26 +90,10 @@ import "../styles/global.css";
 			</svg>
 		</button>
 
+		<!-- Reveals, marquees, parallax, the orbit figure and every piece of
+		     scroll chrome: src/scripts/motion.ts -->
 		<script>
-			// Scroll reveal — fires a little before the element is fully in frame so
-			// the one-second rise has room to finish while it's still travelling up.
-			const io = new IntersectionObserver(
-				(entries) => entries.forEach(e => {
-					if (e.isIntersecting) {
-						e.target.classList.add('is-visible');
-						io.unobserve(e.target);
-					}
-				}),
-				{ threshold: 0.05, rootMargin: '0px 0px -6% 0px' }
-			);
-			document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
-
-			// Scroll to top
-			const btn = document.getElementById('scroll-top');
-			window.addEventListener('scroll', () => {
-				btn?.classList.toggle('visible', window.scrollY > 320);
-			});
-			btn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+			import "../scripts/motion";
 		</script>
 	</body>
 </html>

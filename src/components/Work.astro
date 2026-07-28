@@ -50,12 +50,17 @@ const projects = [
       </a>
     </div>
 
-    <div class="grid grid-cols-3 gap-5 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4">
+    <!-- One vanishing point for the whole row, so the three cards tilt like
+         panels of a single surface instead of three separate boxes -->
+    <div
+      class="grid grid-cols-3 gap-5 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4"
+      style="perspective: 1400px">
       {projects.map((p, i) => (
         <a
           href={p.link}
-          class="group relative rounded-[16px] overflow-hidden border border-white/10 flex flex-col transition-[border-color,transform] duration-500 ease-soft hover:border-white/20 hover:-translate-y-1 no-underline"
+          class="group relative rounded-[16px] overflow-hidden border border-white/10 flex flex-col transition-[border-color] duration-500 ease-soft hover:border-white/20 no-underline"
           data-reveal
+          data-tilt
           style={`--rd:${i * 90}ms`}
           aria-label={`Ver proyecto ${p.name}`}
         >
@@ -73,8 +78,9 @@ const projects = [
               style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 36px 36px;"
               aria-hidden="true"
             ></div>
-            <!-- Browser chrome -->
-            <div class="absolute inset-0 p-4 flex flex-col gap-3">
+            <!-- Browser chrome. Lags behind the card's tilt, which is what
+                 reads as depth rather than as a rotating rectangle. -->
+            <div class="absolute inset-0 p-4 flex flex-col gap-3" data-tilt-inner>
               <!-- Title bar with dots -->
               <div class="flex items-center gap-[5px]">
                 <div class="w-2 h-2 rounded-full bg-white/15"></div>

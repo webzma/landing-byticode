@@ -49,7 +49,12 @@ const rows = [techs, [...techs.slice(offset), ...techs.slice(0, offset)]];
     <div class="pointer-events-none absolute inset-y-0 right-0 w-32 z-10 bg-linear-to-l from-black to-transparent" aria-hidden="true"></div>
 
     {rows.map((row, ri) => (
-      <div class={`marquee-track flex gap-4 ${ri === 1 ? 'marquee-track--reverse' : ''}`}>
+      <div
+        class="marquee-track flex gap-4"
+        data-marquee
+        data-marquee-duration={ri === 1 ? '34' : '28'}
+        data-marquee-reverse={ri === 1 ? '' : undefined}
+      >
         {/* duplicated for seamless loop */}
         {[...row, ...row].map((t) => (
           <div class="marquee-item shrink-0 flex items-center gap-3 px-5 py-3 bg-white/4 border border-white/10 rounded-2xl text-white/50 hover:text-white hover:bg-white/7 hover:border-white/20 transition-[color,background-color,border-color] duration-300 ease-soft cursor-default group">
@@ -64,27 +69,9 @@ const rows = [techs, [...techs.slice(offset), ...techs.slice(0, offset)]];
 </section>
 
 <style>
+  /* Both rows travel on GSAP (marquees() in src/scripts/motion.ts) — the two
+     counter-drifting speeds now also stretch and reverse with the scroll. */
   .marquee-track {
     width: max-content;
-    animation: marquee 28s linear infinite;
-  }
-
-  .marquee-track--reverse {
-    animation-name: marquee-reverse;
-    animation-duration: 34s;
-  }
-
-  .marquee-track:hover {
-    animation-play-state: paused;
-  }
-
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  @keyframes marquee-reverse {
-    from { transform: translateX(-50%); }
-    to   { transform: translateX(0); }
   }
 </style>

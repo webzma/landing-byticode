@@ -11,17 +11,22 @@ const capabilities = [
   { title: "Consultoría", detail: "Auditoría · Estrategia · Roadmap" },
 ];
 
+/* `value` is what the markup ships — the figure is correct before any script
+   runs. `count`/`suffix` are what motion.ts counts up to when the rail is
+   first seen; it rewrites the same string it replaces. */
 const stats = [
-  { label: "Proyectos", value: "32+" },
-  { label: "Clientes satisfechos", value: "100%" },
+  { label: "Proyectos", value: "32+", count: 32, suffix: "+" },
+  { label: "Clientes satisfechos", value: "100%", count: 100, suffix: "%" },
 ];
 
 /* Nodes sit on the rings by construction — each is a parametric point of the
-   ellipse it belongs to, so none of them float off its line. */
-const nodes = [
-  { cx: 454, cy: 169 },
-  { cx: 66, cy: 295 },
-  { cx: 302, cy: 32 },
+   ellipse it belongs to, so none of them float off its line. They are declared
+   inside the ring they belong to: motion.ts rotates each ring group as a unit,
+   which walks the node along its own ellipse instead of leaving it behind. */
+const rings: { rotate: number; nodes: { cx: number; cy: number }[] }[] = [
+  { rotate: -18, nodes: [{ cx: 454, cy: 169 }, { cx: 66, cy: 295 }] },
+  { rotate: 42, nodes: [] },
+  { rotate: 102, nodes: [{ cx: 302, cy: 32 }] },
 ];
 ---
 
@@ -52,7 +57,7 @@ const nodes = [
       class="grid grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-center gap-16
         max-[900px]:grid-cols-1 max-[900px]:gap-14">
 
-      <div class="min-w-0">
+      <div class="min-w-0" data-hero-copy>
         <p
           class="anim-rise m-0 inline-flex items-center gap-2.5 rounded-full border border-hairline-strong px-3.5 py-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-white/60">
           <span
@@ -133,7 +138,10 @@ const nodes = [
                 <dt class="mb-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/50">
                   {s.label}
                 </dt>
-                <dd class="m-0 text-[1.625rem] font-extrabold leading-none tracking-[-0.03em] text-white tabular-nums">
+                <dd
+                  class="m-0 text-[1.625rem] font-extrabold leading-none tracking-[-0.03em] text-white tabular-nums"
+                  data-count={s.count}
+                  data-count-suffix={s.suffix}>
                   {s.value}
                 </dd>
               </div>
@@ -143,10 +151,12 @@ const nodes = [
       </div>
 
       <!-- The studio's own mark at the core of the systems it builds -->
+      <!-- The entrance (rings drawing themselves) and the perpetual rotation
+           are both GSAP — see hero() in src/scripts/motion.ts -->
       <figure
-        class="anim-zoom relative m-0 w-full max-w-[440px] justify-self-end
+        class="relative m-0 w-full max-w-[440px] justify-self-end
           max-[900px]:mx-auto max-[900px]:justify-self-center"
-        style="--d:0.5s">
+        data-orbit>
         <svg
           viewBox="0 0 520 464"
           class="block h-auto w-full"
@@ -156,40 +166,31 @@ const nodes = [
             cx="260"
             cy="232"
             r="140"
+            data-orbit-halo
             style="stroke: var(--orbit-ring-soft)"
             stroke-width="1"></circle>
-          <ellipse
-            cx="260"
-            cy="232"
-            rx="204"
-            ry="74"
-            transform="rotate(-18 260 232)"
-            style="stroke: var(--orbit-ring)"
-            stroke-width="1"></ellipse>
-          <ellipse
-            cx="260"
-            cy="232"
-            rx="204"
-            ry="74"
-            transform="rotate(42 260 232)"
-            style="stroke: var(--orbit-ring)"
-            stroke-width="1"></ellipse>
-          <ellipse
-            cx="260"
-            cy="232"
-            rx="204"
-            ry="74"
-            transform="rotate(102 260 232)"
-            style="stroke: var(--orbit-ring)"
-            stroke-width="1"></ellipse>
           {
-            nodes.map((n) => (
-              <circle
-                cx={n.cx}
-                cy={n.cy}
-                r="4.5"
-                style="fill: var(--orbit-node)"
-              />
+            rings.map((ring) => (
+              <g data-orbit-ring>
+                <ellipse
+                  cx="260"
+                  cy="232"
+                  rx="204"
+                  ry="74"
+                  transform={`rotate(${ring.rotate} 260 232)`}
+                  style="stroke: var(--orbit-ring)"
+                  stroke-width="1"
+                />
+                {ring.nodes.map((n) => (
+                  <circle
+                    cx={n.cx}
+                    cy={n.cy}
+                    r="4.5"
+                    data-orbit-node
+                    style="fill: var(--orbit-node)"
+                  />
+                ))}
+              </g>
             ))
           }
         </svg>

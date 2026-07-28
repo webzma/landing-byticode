@@ -44,7 +44,7 @@ const clients = [
   <div class="mx-auto flex max-w-[1080px] flex-col items-center px-6 text-center max-[580px]:px-5">
     <h2
       class="m-0 max-w-[24ch] font-sans text-[clamp(1.75rem,2.5vw,2.25rem)] font-bold leading-[1.15] tracking-[-0.03em] text-balance text-white"
-      data-reveal>
+      data-split>
       Empresas y negocios que confían en nosotros
     </h2>
     <p
@@ -67,8 +67,12 @@ const clients = [
     <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-linear-to-l from-black to-transparent" aria-hidden="true"></div>
 
     <!-- Four copies: each half of the track outruns the widest viewport, so the
-         -50% loop never exposes an edge -->
-    <div class="marquee-track relative flex gap-4">
+         -50% loop never exposes an edge. GSAP drives the travel (marquees() in
+         src/scripts/motion.ts) so the rail answers scroll speed and direction. -->
+    <div
+      class="marquee-track relative flex gap-4"
+      data-marquee
+      data-marquee-duration="34">
       {[...clients, ...clients, ...clients, ...clients].map((c) => (
         <div class={`group flex min-h-[92px] w-[220px] shrink-0 items-center justify-center rounded-[10px] border border-white/10 px-6 py-8 transition-[background,border-color] duration-300 ease-soft ${c.highlight ? 'bg-[linear-gradient(135deg,rgba(90,20,200,0.55)_0%,rgba(55,5,140,0.45)_100%)] hover:bg-[linear-gradient(135deg,rgba(100,30,210,0.65)_0%,rgba(65,10,155,0.55)_100%)]' : 'bg-transparent hover:border-white/20 hover:bg-white/[0.04]'}`}>
           <div class={`flex items-center gap-[0.625rem] transition-colors duration-300 ease-soft group-hover:text-white ${c.highlight ? 'text-white' : 'text-white/75'}`}>
@@ -84,11 +88,9 @@ const clients = [
 </section>
 
 <style>
+  /* Travel and hover-slowdown are GSAP's; the track only has to be wider than
+     the viewport for the loop to work. */
   .marquee-track {
     width: max-content;
-    animation: marquee 34s linear infinite;
-  }
-  .marquee-track:hover {
-    animation-play-state: paused;
   }
 </style>
