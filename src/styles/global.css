@@ -1,12 +1,15 @@
-/* Hallmark · pre-emit critique: P5 H5 E5 S4 R5 V5
+/* Hallmark · pre-emit critique: P4 H5 E5 S4 R4 V4
  * genre: modern-minimal · macrostructure: Split Studio · hero: H2 Split diptych
- *   H2 knobs: ratio=7/5 · right-side=proof column · divider=vertical rule
+ *   H2 knobs: ratio=7/5 · right-side=H9 orbit figure (was: proof column)
+ *             · divider=hairline horizon rule (was: vertical rule)
+ *             · light source=bottom edge (was: upper-left)
  * theme: project system (dark blue-tinted paper · DM Sans display+body · mono micro-labels
  *   · accent oklch(0.68 0.18 245))
- * enrichment: none — typography + hairline structure
- *   (Tier-A canvas: 2-stop gradient + feTurbulence grain)
+ * enrichment: Tier-B hand-built SVG — orbit rings around the Byticode mark
+ *   (Tier-A canvas retained: tinted descent + single-hue bottom bloom + feTurbulence grain)
  * scope: hero section only · nav + footer untouched
  * tone: technical · confident · restrained
+ * contrast: pass (40–41) · mobile: pass (34, 49, 50–57) · tokens: pass (48) · slop: pass (42–45)
  */
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -134,11 +137,38 @@
     oklch(0.03 0.006 245) 86%,
     oklch(0 0 0) 100%
   );
-  /* Single edge-anchored light source, upper-left — behind the headline */
-  --hero-veil: radial-gradient(
-    92% 72% at 6% 0%,
-    oklch(0.45 0.19 245 / 24%) 0%,
-    transparent 62%
+  /* Light from below. The bloom sits low and wide so it reads as a horizon
+     behind the stat rail, not as a blob floating behind the headline. One hue
+     only — a second hue here is what turns a canvas into the purple-gradient
+     hero. The black stop rides on top so the seam with the next (pure black)
+     section stays invisible even at the bloom's brightest. */
+  --hero-veil:
+    linear-gradient(
+      180deg,
+      transparent 66%,
+      oklch(0 0 0 / 40%) 88%,
+      oklch(0 0 0) 100%
+    ),
+    radial-gradient(
+      88% 46% at 50% 76%,
+      oklch(0.6 0.21 250 / 52%) 0%,
+      oklch(0.52 0.2 250 / 20%) 38%,
+      transparent 70%
+    ),
+    radial-gradient(
+      64% 46% at 4% 2%,
+      oklch(0.45 0.19 250 / 13%) 0%,
+      transparent 58%
+    );
+  /* Orbit figure — hairline rings, brand-lit core. Drawn, not decorated. */
+  --orbit-ring: oklch(1 0 0 / 26%);
+  --orbit-ring-soft: oklch(1 0 0 / 11%);
+  --orbit-node: oklch(0.78 0.16 250);
+  --orbit-core: radial-gradient(
+    circle at center,
+    oklch(0.58 0.21 250 / 40%) 0%,
+    oklch(0.45 0.19 250 / 14%) 42%,
+    transparent 74%
   );
   /* Film grain — kills the synthetic flatness of a pure CSS gradient */
   --hero-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");

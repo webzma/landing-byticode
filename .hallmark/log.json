@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-07-28",
+    "macrostructure": "Split Studio",
+    "genre": "modern-minimal",
+    "theme": "project system (dark blue-tinted · DM Sans + system mono · accent oklch(0.68 0.18 245))",
+    "theme_axes": "dark / grotesk-sans / cool",
+    "hero": "H2 Split diptych — ratio=7/5, right-side=H9 orbit figure, divider=hairline horizon rule, light=bottom edge",
+    "knob_deltas": "right-side: proof column → H9 hand-built SVG · light source: upper-left veil → bottom bloom · divider: vertical rule → horizon rule · CTA: single fill → segmented (matches header)",
+    "nav": "pre-existing (out of scope)",
+    "footer": "pre-existing (out of scope)",
+    "enrichment": "Tier-B hand-built SVG — orbit rings around the Byticode mark (Tier-A canvas retained)",
+    "scope": "hero section only",
+    "brief": "Byticode — rediseño del hero con referencia visual del usuario (capturas del template Korix; DNA estructural extraída, gradiente púrpura descartado)"
+  },
+  {
     "date": "2026-07-24",
     "macrostructure": "Split Studio",
     "genre": "modern-minimal",

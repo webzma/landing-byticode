@@ -1,8 +1,9 @@
 ---
 import Header from "./Header.astro";
 import SplitText from "./SplitText.astro";
+import ImgLogo from "@/assets/logo-byticode-without-bg-po.webp";
 
-/* The panel below the fold carries information, not decoration. Content mirrors
+/* The strip below the fold carries information, not decoration. Content mirrors
    Services.astro so the fold states what we actually build. */
 const capabilities = [
   { title: "Web & Apps", detail: "UI/UX · Desarrollo · Optimización" },
@@ -14,12 +15,20 @@ const stats = [
   { label: "Proyectos", value: "32+" },
   { label: "Clientes satisfechos", value: "100%" },
 ];
+
+/* Nodes sit on the rings by construction — each is a parametric point of the
+   ellipse it belongs to, so none of them float off its line. */
+const nodes = [
+  { cx: 454, cy: 169 },
+  { cx: 66, cy: 295 },
+  { cx: 302, cy: 32 },
+];
 ---
 
 <div class="relative overflow-hidden" style="background: var(--hero-gradient)">
   <Header />
 
-  <!-- Single edge-anchored light source, upper-left -->
+  <!-- Light from below + the fade that keeps the seam clean -->
   <div
     class="pointer-events-none absolute inset-0"
     aria-hidden="true"
@@ -34,93 +43,189 @@ const stats = [
 
   <section
     id="hero"
-    class="relative mx-auto flex min-h-svh max-w-[1080px] flex-col items-center
-      justify-center gap-20 px-6 pt-40 pb-16
-      max-[900px]:gap-14 max-[900px]:pt-32
-      max-[640px]:gap-12 max-[640px]:px-5 max-[640px]:pt-28">
+    class="relative mx-auto max-w-[1080px] px-6 pt-28 pb-40
+      max-[900px]:pt-24 max-[900px]:pb-32
+      max-[640px]:px-5">
 
-    <!-- The claim — one centred column -->
-    <div class="flex w-full max-w-[720px] flex-col items-center text-center">
-      <p
-        class="anim-rise m-0 flex items-center gap-2.5 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-white/55">
-        <span
-          class="h-[6px] w-[6px] shrink-0 rounded-full animate-pulse-dot"
-          style="background: var(--status-online)"
-          aria-hidden="true"></span>
-        Aceptando nuevos proyectos
-      </p>
+    <!-- 7/5 diptych: the claim left, the mark and its orbits right -->
+    <div
+      class="grid grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-center gap-16
+        max-[900px]:grid-cols-1 max-[900px]:gap-14">
 
-      <h1
-        class="m-0 mt-7 max-w-[16ch] text-[clamp(2.5rem,5.4vw,4.5rem)] font-extrabold leading-[1.02] tracking-[-0.035em] text-balance text-white [overflow-wrap:anywhere]">
-        <SplitText
-          mode="word"
-          delay={0.2}
-          segments={[
-            { text: "Diseñamos y desarrollamos software" },
-            { text: "a medida", class: "text-brand" },
-            { text: ".", glue: true },
-          ]}
-        />
-      </h1>
+      <div class="min-w-0">
+        <p
+          class="anim-rise m-0 inline-flex items-center gap-2.5 rounded-full border border-hairline-strong px-3.5 py-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-white/60">
+          <span
+            class="h-[6px] w-[6px] shrink-0 rounded-full animate-pulse-dot"
+            style="background: var(--status-online)"
+            aria-hidden="true"></span>
+          Aceptando nuevos proyectos
+        </p>
 
-      <p
-        class="m-0 mt-6 max-w-[46ch] text-[clamp(0.9375rem,1.4vw,1.0625rem)] leading-[1.65] text-white/65">
-        <SplitText
-          mode="char"
-          delay={0.75}
-          segments={[
-            {
-              text: "Creamos sitios web rápidos y herramientas internas para que gestiones tu negocio y optimices tus procesos.",
-            },
-          ]}
-        />
-      </p>
+        <h1
+          class="m-0 mt-7 min-w-0 max-w-[13ch] text-[clamp(2.375rem,4.4vw,3.75rem)] font-extrabold leading-[1.04] tracking-[-0.035em] text-balance text-white wrap-anywhere">
+          <SplitText
+            mode="word"
+            delay={0.2}
+            segments={[
+              { text: "Diseñamos y desarrollamos software" },
+              { text: "a medida", class: "text-brand" },
+              { text: ".", glue: true },
+            ]}
+          />
+        </h1>
 
-      <div
-        class="anim-rise mt-10 flex flex-wrap items-center justify-center gap-3
-          max-[640px]:w-full max-[640px]:flex-col max-[640px]:items-stretch"
-        style="--d:1.2s">
-        <a
-          href="#contact"
-          class="group inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-[6px] bg-white px-5 py-3.5 text-[0.9375rem] font-semibold text-black no-underline transition-[background-color,transform] duration-200 ease-soft hover:bg-white/88 active:translate-y-px">
-          Reservar llamada
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 15 15"
-            fill="none"
-            aria-hidden="true"
-            class="transition-transform duration-200 ease-soft group-hover:translate-x-0.75">
-            <path
-              d="M2.5 7.5h10M8.5 3.5l4 4-4 4"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"></path>
-          </svg>
-        </a>
-        <a
-          href="#work"
-          class="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-[6px] border border-hairline-strong px-5 py-3.5 text-[0.9375rem] font-medium text-white no-underline transition-[background-color,border-color] duration-200 ease-soft hover:border-white/30 hover:bg-white/6 active:translate-y-px">
-          Ver proyectos
-        </a>
+        <p
+          class="m-0 mt-6 max-w-[46ch] text-[clamp(0.9375rem,1.4vw,1.0625rem)] leading-[1.65] text-white/65">
+          <SplitText
+            mode="char"
+            delay={0.75}
+            segments={[
+              {
+                text: "Creamos sitios web rápidos y herramientas internas para que gestiones tu negocio y optimices tus procesos.",
+              },
+            ]}
+          />
+        </p>
+
+        <!-- Segmented primary, same CTA voice as the header -->
+        <div
+          class="anim-rise mt-10 flex flex-wrap items-center gap-3
+            max-[640px]:w-full max-[640px]:flex-col max-[640px]:items-stretch"
+          style="--d:1.2s">
+          <a
+            href="#contact"
+            class="inline-flex items-center overflow-hidden rounded-[6px] text-[0.9375rem] font-semibold no-underline transition-opacity duration-200 ease-soft hover:opacity-90 active:translate-y-px max-[640px]:w-full">
+            <span
+              class="flex min-h-11 items-center whitespace-nowrap bg-white px-5 leading-none text-black max-[640px]:flex-1 max-[640px]:justify-center">
+              Reservar llamada
+            </span>
+            <span
+              class="flex min-h-11 w-11 shrink-0 items-center justify-center bg-accent text-white">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                aria-hidden="true">
+                <path
+                  d="M2.5 7.5h10M8.5 3.5l4 4-4 4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </a>
+          <a
+            href="#work"
+            class="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-[6px] border border-hairline-strong px-5 text-[0.9375rem] font-medium leading-none text-white no-underline transition-[background-color,border-color] duration-200 ease-soft hover:border-white/30 hover:bg-white/6 active:translate-y-px">
+            Ver proyectos
+          </a>
+        </div>
+
+        <dl
+          class="anim-rise m-0 mt-10 flex flex-wrap gap-x-12 gap-y-6 border-t border-hairline pt-6"
+          style="--d:1.4s">
+          {
+            stats.map((s) => (
+              <div class="min-w-0">
+                <dt class="mb-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/50">
+                  {s.label}
+                </dt>
+                <dd class="m-0 text-[1.625rem] font-extrabold leading-none tracking-[-0.03em] text-white tabular-nums">
+                  {s.value}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
       </div>
+
+      <!-- The studio's own mark at the core of the systems it builds -->
+      <figure
+        class="anim-zoom relative m-0 w-full max-w-[440px] justify-self-end
+          max-[900px]:mx-auto max-[900px]:justify-self-center"
+        style="--d:0.5s">
+        <svg
+          viewBox="0 0 520 464"
+          class="block h-auto w-full"
+          fill="none"
+          aria-hidden="true">
+          <circle
+            cx="260"
+            cy="232"
+            r="140"
+            style="stroke: var(--orbit-ring-soft)"
+            stroke-width="1"></circle>
+          <ellipse
+            cx="260"
+            cy="232"
+            rx="204"
+            ry="74"
+            transform="rotate(-18 260 232)"
+            style="stroke: var(--orbit-ring)"
+            stroke-width="1"></ellipse>
+          <ellipse
+            cx="260"
+            cy="232"
+            rx="204"
+            ry="74"
+            transform="rotate(42 260 232)"
+            style="stroke: var(--orbit-ring)"
+            stroke-width="1"></ellipse>
+          <ellipse
+            cx="260"
+            cy="232"
+            rx="204"
+            ry="74"
+            transform="rotate(102 260 232)"
+            style="stroke: var(--orbit-ring)"
+            stroke-width="1"></ellipse>
+          {
+            nodes.map((n) => (
+              <circle
+                cx={n.cx}
+                cy={n.cy}
+                r="4.5"
+                style="fill: var(--orbit-node)"
+              />
+            ))
+          }
+        </svg>
+
+        <div
+          class="pointer-events-none absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          aria-hidden="true"
+          style="background: var(--orbit-core)">
+        </div>
+
+        <img
+          src={ImgLogo.src}
+          alt="Byticode"
+          width="64"
+          height="64"
+          fetchpriority="high"
+          class="absolute left-1/2 top-1/2 h-16 w-16 max-w-full -translate-x-1/2 -translate-y-1/2 invert
+            max-[640px]:h-12 max-[640px]:w-12"
+        />
+      </figure>
     </div>
 
-    <!-- The proof panel: what we build, in our own words -->
+    <!-- Horizon rule: what we build, in our own words -->
     <div
-      class="anim-zoom w-full rounded-[20px] border border-hairline bg-white/[0.03] backdrop-blur-sm"
-      style="--d:0.5s">
+      class="anim-rise mt-24 border-t border-hairline max-[900px]:mt-16"
+      style="--d:1.6s">
       <div
-        class="flex items-center justify-between gap-4 border-b border-hairline px-7 py-4 max-[640px]:px-5">
+        class="flex items-center justify-between gap-4 border-b border-hairline py-4">
         <p
           class="m-0 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-white/50">
           Qué construimos
         </p>
         <a
           href="#services"
-          class="group inline-flex items-center gap-1.5 whitespace-nowrap text-[0.8125rem] font-medium text-white/60 no-underline transition-colors duration-200 ease-soft hover:text-white">
-          Ver todos los servicios
+          class="group inline-flex items-center gap-1.5 whitespace-nowrap text-[0.8125rem] font-medium text-white/60 no-underline transition-colors duration-200 ease-soft hover:text-white active:translate-y-px">
+          Ver servicios
           <svg
             width="13"
             height="13"
@@ -138,11 +243,10 @@ const stats = [
         </a>
       </div>
 
-      <ul
-        class="m-0 grid list-none grid-cols-3 p-0 max-[760px]:grid-cols-1">
+      <ul class="m-0 grid list-none grid-cols-3 p-0 max-[760px]:grid-cols-1">
         {
           capabilities.map((c) => (
-            <li class="border-r border-hairline px-7 py-6 last:border-r-0 max-[760px]:border-r-0 max-[760px]:border-b max-[760px]:border-hairline max-[760px]:px-5 max-[760px]:last:border-b-0">
+            <li class="border-r border-hairline px-7 py-6 first:pl-0 last:border-r-0 last:pr-0 max-[760px]:border-r-0 max-[760px]:border-b max-[760px]:border-hairline max-[760px]:px-0 max-[760px]:last:border-b-0">
               <p class="m-0 mb-1.5 text-[1.0625rem] font-semibold tracking-[-0.01em] text-white">
                 {c.title}
               </p>
@@ -153,22 +257,6 @@ const stats = [
           ))
         }
       </ul>
-
-      <dl
-        class="m-0 flex flex-wrap gap-x-12 gap-y-6 border-t border-hairline px-7 py-6 max-[640px]:px-5">
-        {
-          stats.map((s) => (
-            <div class="min-w-0">
-              <dt class="mb-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/50">
-                {s.label}
-              </dt>
-              <dd class="m-0 text-[1.75rem] font-extrabold leading-none tracking-[-0.03em] text-white tabular-nums">
-                {s.value}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
     </div>
   </section>
 </div>
