@@ -1,95 +1,75 @@
 ---
+import SectionHeader from './SectionHeader.astro';
+
 const clients = [
   {
     name: "Nexara",
-    italic: false,
-    highlight: false,
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.5" stroke="currentColor" stroke-width="1.3"/><circle cx="9" cy="9" r="3.5" stroke="currentColor" stroke-width="1.3"/></svg>`,
   },
   {
     name: "FlowSync",
-    italic: false,
-    highlight: false,
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M15 9a6 6 0 1 1-1.76-4.24" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M13 3l2.24 2-2.24 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   },
   {
     name: "Stelera",
-    italic: false,
-    highlight: false,
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5v15M1.5 9h15M3.7 3.7l10.6 10.6M14.3 3.7L3.7 14.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`,
   },
   {
     name: "Logobase",
-    italic: true,
-    highlight: false,
     icon: null,
   },
   {
     name: "Prismacore",
-    italic: false,
-    highlight: false,
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L16.5 15.5H1.5L9 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 2v13.5" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/></svg>`,
   },
   {
     name: "DevCraft_",
-    italic: false,
-    highlight: false,
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6.5 4L2 9l4.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 4L16 9l-4.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   },
 ];
 ---
 
-<section class="relative bg-black py-24 overflow-hidden max-[580px]:py-16">
-  <!-- Centred claim, then the roster drifting past underneath -->
-  <div class="mx-auto flex max-w-[1080px] flex-col items-center px-6 text-center max-[580px]:px-5">
-    <h2
-      class="m-0 max-w-[24ch] font-sans text-[clamp(1.75rem,2.5vw,2.25rem)] font-bold leading-[1.15] tracking-[-0.03em] text-balance text-white"
-      data-split>
-      Empresas y negocios que confían en nosotros
-    </h2>
-    <p
-      class="m-0 mt-4 max-w-[52ch] text-[0.9375rem] leading-[1.65] text-white/50"
-      data-reveal
-      data-reveal-delay="1">
-      Colaboramos con empresas de todos los tamaños — startups, pymes y organizaciones.
-    </p>
-  </div>
+<section class="section overflow-hidden">
+  <SectionHeader
+    eyebrow="Clientes"
+    title="Empresas y negocios que confían en nosotros"
+    description="Colaboramos con empresas de todos los tamaños — startups, pymes y organizaciones."
+    class="px-0"
+  />
 
-  <div class="relative mt-14 max-[580px]:mt-10" data-reveal data-reveal-delay="2">
+  <div class="relative" data-reveal>
+    <!-- Glow central tras el roster -->
     <div
       class="pointer-events-none absolute left-1/2 top-1/2 h-[320px] w-[620px] -translate-x-1/2 -translate-y-1/2 blur-[10px]"
       aria-hidden="true"
-      style="background: radial-gradient(ellipse at center, var(--glow-md) 0%, transparent 68%)">
+      style="background: radial-gradient(ellipse at center, rgba(47,107,255,0.18) 0%, transparent 68%)">
     </div>
 
-    <!-- Edge fades so the loop has no visible seam -->
-    <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-32 bg-linear-to-r from-black to-transparent" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-linear-to-l from-black to-transparent" aria-hidden="true"></div>
-
-    <!-- Four copies: each half of the track outruns the widest viewport, so the
-         -50% loop never exposes an edge. GSAP drives the travel (marquees() in
-         src/scripts/motion.ts) so the rail answers scroll speed and direction. -->
-    <div
-      class="marquee-track relative flex gap-4"
-      data-marquee
-      data-marquee-duration="34">
-      {[...clients, ...clients, ...clients, ...clients].map((c) => (
-        <div class={`group flex min-h-[92px] w-[220px] shrink-0 items-center justify-center rounded-[10px] border border-white/10 px-6 py-8 transition-[background,border-color] duration-300 ease-soft ${c.highlight ? 'bg-[linear-gradient(135deg,rgba(90,20,200,0.55)_0%,rgba(55,5,140,0.45)_100%)] hover:bg-[linear-gradient(135deg,rgba(100,30,210,0.65)_0%,rgba(65,10,155,0.55)_100%)]' : 'bg-transparent hover:border-white/20 hover:bg-white/[0.04]'}`}>
-          <div class={`flex items-center gap-[0.625rem] transition-colors duration-300 ease-soft group-hover:text-white ${c.highlight ? 'text-white' : 'text-white/75'}`}>
-            {c.icon && <span class="flex items-center shrink-0" set:html={c.icon} />}
-            <span class={`text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap ${c.italic ? 'font-bold italic' : ''}`}>
-              {c.name}
-            </span>
+    <!-- Cuatro copias: cada mitad del track supera el viewport más ancho, así
+         el loop del -50% nunca enseña un borde. GSAP conduce el viaje. -->
+    <div class="marquee-mask overflow-hidden">
+      <div
+        class="marquee-track relative flex gap-4"
+        data-marquee
+        data-marquee-duration="34">
+        {[...clients, ...clients, ...clients, ...clients].map((c) => (
+          <div class="group flex min-h-[92px] w-[220px] shrink-0 items-center justify-center rounded-[14px] border border-white/[0.07] bg-[#0d0d10] px-6 py-8 transition-colors duration-300 hover:border-white/15">
+            <div class="flex items-center gap-[0.625rem] text-[#b3b3ba] transition-colors duration-300 group-hover:text-white">
+              {c.icon && <span class="flex items-center shrink-0" set:html={c.icon} />}
+              <span class="text-[0.9375rem] font-medium tracking-[-0.01em] whitespace-nowrap">
+                {c.name}
+              </span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Travel and hover-slowdown are GSAP's; the track only has to be wider than
-     the viewport for the loop to work. */
+  /* El viaje y la desaceleración al hover son de GSAP; al track solo le hace
+     falta ser más ancho que el viewport para que el loop funcione. */
   .marquee-track {
     width: max-content;
   }

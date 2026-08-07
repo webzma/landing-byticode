@@ -27,27 +27,21 @@ const techs = [
   { name: 'Supabase',   icon: SupabaseIcon },
 ];
 
-/* Two counter-drifting rows read as a moving surface rather than a ticker.
-   Both rows carry the full list — the second one rotated — so each half of each
-   track is wider than any viewport and the -50% loop never exposes an edge. */
+/* Dos filas que derivan en sentidos opuestos leen como una superficie en
+   movimiento, no como un ticker. Ambas llevan la lista completa — la segunda
+   rotada — para que cada mitad de cada track supere cualquier viewport y el
+   loop del -50% nunca enseñe un borde. */
 const offset = Math.ceil(techs.length / 2);
 const rows = [techs, [...techs.slice(offset), ...techs.slice(0, offset)]];
 ---
 
-<section class="bg-black py-28 max-[900px]:py-20 max-[640px]:py-16 overflow-hidden">
-
+<section class="section overflow-hidden">
   <SectionHeader
     eyebrow="Stack"
     title="Tecnologías que usamos"
-    class="mb-14 px-6 max-[640px]:mb-10 max-[640px]:px-5"
   />
 
-  <!-- Marquee container with edge fades -->
-  <div class="relative flex flex-col gap-4" data-reveal data-reveal-delay="2">
-    <!-- fade edges -->
-    <div class="pointer-events-none absolute inset-y-0 left-0 w-32 z-10 bg-linear-to-r from-black to-transparent" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute inset-y-0 right-0 w-32 z-10 bg-linear-to-l from-black to-transparent" aria-hidden="true"></div>
-
+  <div class="marquee-mask relative flex flex-col gap-4" data-reveal>
     {rows.map((row, ri) => (
       <div
         class="marquee-track flex gap-4"
@@ -55,22 +49,19 @@ const rows = [techs, [...techs.slice(offset), ...techs.slice(0, offset)]];
         data-marquee-duration={ri === 1 ? '34' : '28'}
         data-marquee-reverse={ri === 1 ? '' : undefined}
       >
-        {/* duplicated for seamless loop */}
+        {/* duplicado para un loop sin costura */}
         {[...row, ...row].map((t) => (
-          <div class="marquee-item shrink-0 flex items-center gap-3 px-5 py-3 bg-white/4 border border-white/10 rounded-2xl text-white/50 hover:text-white hover:bg-white/7 hover:border-white/20 transition-[color,background-color,border-color] duration-300 ease-soft cursor-default group">
-            <t.icon class="size-10 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300 ease-soft" />
-            <span class="text-xl font-medium tracking-wide whitespace-nowrap">{t.name}</span>
+          <div class="group flex shrink-0 cursor-default items-center gap-3 rounded-[12px] border border-white/[0.07] bg-[#0d0d10] px-5 py-3 text-[#b3b3ba] transition-colors duration-300 hover:border-white/15 hover:text-white">
+            <t.icon class="size-8 shrink-0 opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+            <span class="text-[15px] font-normal whitespace-nowrap">{t.name}</span>
           </div>
         ))}
       </div>
     ))}
   </div>
-
 </section>
 
 <style>
-  /* Both rows travel on GSAP (marquees() in src/scripts/motion.ts) — the two
-     counter-drifting speeds now also stretch and reverse with the scroll. */
   .marquee-track {
     width: max-content;
   }

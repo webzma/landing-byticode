@@ -1,47 +1,37 @@
 /**
- * Page motion — GSAP.
+ * Page motion — GSAP + canvas.
  *
- * Division of labour with global.css: the stylesheet owns the hero's load-time
- * entrance (it paints before this module parses, so the fold is never blank and
- * never waits on JS). Everything that depends on scroll position, runs forever,
- * or answers the pointer lives here.
+ * División de trabajo con global.css: la hoja de estilos posee el estado
+ * previo al reveal de cada elemento, para que nada aparezca antes de que
+ * GSAP tome el control. `.js-motion` (puesto inline en el head) y el
+ * failsafe `.motion-failed` garantizan que la página se muestre aunque el
+ * bundle no llegue.
  *
- * The stylesheet also holds the pre-motion state of every revealed element, so
- * nothing flashes in before GSAP takes over. `.js-motion` (set inline in the
- * head) kills the CSS transitions on those elements — GSAP writes the same
- * properties frame by frame and the two systems must not both drive them.
+ * El comportamiento es el de la referencia (Byticode Striv.dc):
+ * cielo estrellado en canvas con parallax y estrellas fugaces, barra de
+ * progreso, spotlight en tarjetas, reveals suaves de 26px y marquees.
  */
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { CustomEase } from "gsap/CustomEase";
-import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(
-  ScrollTrigger,
-  ScrollToPlugin,
-  DrawSVGPlugin,
-  CustomEase,
-  SplitText
-);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, CustomEase);
 
-/* The page's three motion curves, ported from the CSS custom properties so a
-   GSAP tween and a CSS transition on the same page land the same way. */
-CustomEase.create("soft", "M0,0 C0.12,0.23 0.17,0.99 1,1");
-CustomEase.create("glide", "M0,0 C0.12,0.23 0.5,1 1,1");
+/* Las curvas de movimiento de la página, portadas de las custom properties
+   CSS para que un tween de GSAP y una transición CSS aterricen igual. */
+CustomEase.create("soft", "M0,0 C0.22,0.61,0.36,1 1,1");
+CustomEase.create("glide", "M0,0 C0.12,0.23,0.5,1 1,1");
 CustomEase.create("swift", "M0,0 C0.35,0 0,1 1,1");
 
-gsap.defaults({ ease: "soft", duration: 1 });
+gsap.defaults({ ease: "soft", duration: 0.7 });
 
-/** The fixed header's height — anchor targets have to clear it. */
+/** La altura del header sticky — los anclajes tienen que quedar por debajo. */
 const HEADER_OFFSET = 88;
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Scroll reveal — replaces the IntersectionObserver the page used to run.
-   Same vocabulary as before (rise out of a blur, soft, zoom, fade), but
-   batched: elements that cross the line together enter as one staggered
-   group instead of each firing on its own timer.
+   Scroll reveal — subida de 26px con la curva de la referencia, en lotes
+   escalonados de 60ms.
    ───────────────────────────────────────────────────────────────────────── */
 interface RevealVariant {
   from: gsap.TweenVars;
@@ -50,33 +40,33 @@ interface RevealVariant {
 
 const REVEALS: Record<string, RevealVariant> = {
   "": {
-    from: { opacity: 0, y: 40, filter: "blur(10px)" },
-    to: { opacity: 1, y: 0, filter: "blur(0px)", duration: 1 },
+    from: { opacity: 0, y: 26 },
+    to: { opacity: 1, y: 0, duration: 0.7 },
   },
   soft: {
-    from: { opacity: 0, y: 20, filter: "blur(4px)" },
-    to: { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 },
+    from: { opacity: 0, y: 16 },
+    to: { opacity: 1, y: 0, duration: 0.6 },
   },
   zoom: {
-    from: { opacity: 1, scale: 1.05 },
-    to: { opacity: 1, scale: 1, duration: 1.6, ease: "glide" },
+    from: { opacity: 1, scale: 1.03 },
+    to: { opacity: 1, scale: 1, duration: 1.2, ease: "glide" },
   },
   fade: {
     from: { opacity: 0 },
-    to: { opacity: 1, duration: 1 },
+    to: { opacity: 1, duration: 0.7 },
   },
 };
 
 function reveals() {
   const all = gsap.utils.toArray<HTMLElement>("[data-reveal]");
 
-  /* One batch per variant — mixing a rise and a zoom into the same stagger
-     would hand them the same tween vars. */
+  /* Un lote por variante — mezclar una subida y un zoom en el mismo stagger
+     les daría los mismos vars a todos. */
   for (const [variant, spec] of Object.entries(REVEALS)) {
     const els = all.filter((el) => (el.dataset.reveal ?? "") === variant);
     if (!els.length) continue;
 
-    gsap.set(els, { ...spec.from, willChange: "transform, opacity, filter" });
+    gsap.set(els, { ...spec.from, willChange: "transform, opacity" });
 
     ScrollTrigger.batch(els, {
       start: "top 90%",
@@ -86,15 +76,11 @@ function reveals() {
       onEnter: (batch) =>
         gsap.to(batch, {
           ...spec.to,
-          stagger: 0.09,
+          stagger: 0.06,
           overwrite: true,
           onComplete() {
-            /* Hand the element back to the stylesheet's finished state, then
-               strip every inline property GSAP wrote. Two reasons: a lingering
-               blur filter would keep each revealed section on its own
-               compositing layer for the rest of the session, and a lingering
-               inline transform would outrank the `hover:-translate-y-1` on the
-               cards underneath. */
+            /* Devolver el elemento al estado final de la hoja de estilos y
+               limpiar los inline props que GSAP escribió. */
             (this.targets() as HTMLElement[]).forEach((el) =>
               el.classList.add("is-visible")
             );
@@ -106,140 +92,191 @@ function reveals() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Section headlines — split into lines and pushed up out of a mask, so each
-   line arrives on its own beat instead of the block fading in whole.
+   Cielo estrellado — canvas del hero, portado de la referencia: estrellas
+   con parallax al puntero, atenuadas en la banda del titular, y estrellas
+   fugaces ocasionales. Con reduced-motion pinta un único frame estático.
    ───────────────────────────────────────────────────────────────────────── */
-function splitHeadlines() {
-  gsap.utils.toArray<HTMLElement>("[data-split]").forEach((el) => {
-    SplitText.create(el, {
-      type: "lines",
-      mask: "lines",
-      /* Re-splits when the line breaks change (resize, font swap) and
-         re-runs onSplit, so a headline never ends up half-animated. */
-      autoSplit: true,
-      onSplit(self) {
-        gsap.set(el, { visibility: "visible" });
-        return gsap.from(self.lines, {
-          yPercent: 115,
-          opacity: 0,
-          duration: 1,
-          stagger: 0.11,
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
-        });
-      },
-    });
-  });
-}
+function sky() {
+  const canvas = document.querySelector<HTMLCanvasElement>("[data-sky]");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Hero — the orbit figure draws itself, then never stops turning. The rings
-   carry their nodes: each node is a parametric point of the ellipse it is
-   grouped with, so rotating the group walks the node along its own ring.
-   ───────────────────────────────────────────────────────────────────────── */
-function hero() {
-  const figure = document.querySelector<HTMLElement>("[data-orbit]");
-  if (!figure) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
 
-  const rings = gsap.utils.toArray<SVGGElement>("[data-orbit-ring]", figure);
-  const strokes = gsap.utils.toArray<SVGElement>(
-    "[data-orbit-ring] ellipse",
-    figure
-  );
-  const nodes = gsap.utils.toArray<SVGCircleElement>(
-    "[data-orbit-node]",
-    figure
-  );
-  const halo = figure.querySelector<SVGCircleElement>("[data-orbit-halo]");
+  let W = 0,
+    H = 0;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  interface Star {
+    x: number; y: number; z: number; r: number;
+    base: number; amp: number; tw: number; ph: number;
+    dim: number; bright: boolean; c: string;
+  }
+  interface Shoot {
+    x: number; y: number; vx: number; vy: number;
+    len: number; life: number; max: number;
+  }
+  let stars: Star[] = [];
+  let shoots: Shoot[] = [];
+  const COLORS = ["#ffffff", "#dfe7ff", "#cdd6ff", "#bcd2ff", "#e8e0ff", "#fff4e0"];
 
-  /* Set the drawn-out state now rather than inside the delayed timeline —
-     any gap here is a frame of fully drawn rings. */
-  gsap.set(strokes, { drawSVG: "0%" });
-  gsap.set(nodes, { scale: 0, transformOrigin: "center", opacity: 0 });
-  if (halo) gsap.set(halo, { drawSVG: "0%" });
-
-  const entrance = gsap.timeline({ delay: 0.45 });
-  entrance
-    .from(figure, { scale: 1.06, duration: 2, ease: "glide" }, 0)
-    .to(strokes, { drawSVG: "100%", duration: 2.2, stagger: 0.16 }, 0);
-  if (halo) entrance.to(halo, { drawSVG: "100%", duration: 1.8 }, 0.3);
-  entrance
-    .to(
-      nodes,
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 0.9,
-        stagger: 0.14,
-        ease: "back.out(2.2)",
-      },
-      1.1
-    );
-
-  /* Each ring turns at its own pace and its own direction — three periods
-     that never line up, so the figure never repeats a pose. */
-  rings.forEach((ring, i) => {
-    gsap.to(ring, {
-      rotation: i % 2 === 0 ? "+=360" : "-=360",
-      svgOrigin: "260 232",
-      duration: 120 + i * 34,
-      repeat: -1,
-      ease: "none",
-    });
-  });
-
-  /* Nodes breathe out of phase with the rings they ride. */
-  gsap.to(nodes, {
-    opacity: 0.45,
-    duration: 2.4,
-    repeat: -1,
-    yoyo: true,
-    stagger: { each: 0.6, from: "random" },
-    ease: "sine.inOut",
-    delay: 2.2,
-  });
-
-  /* Parallax out of the fold: the claim leaves faster than the figure, and
-     the figure sinks — the two layers separate as the hero scrolls away. */
-  const parallax = {
-    ease: "none" as const,
-    scrollTrigger: {
-      trigger: "#hero",
-      start: "top top",
-      end: "bottom top",
-      scrub: 0.5,
-    },
+  const build = () => {
+    const r = canvas.getBoundingClientRect();
+    W = r.width;
+    H = r.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const area = W * H;
+    const count = Math.max(70, Math.min(240, Math.round(area / 4800)));
+    stars = [];
+    for (let i = 0; i < count; i++) {
+      const depth = Math.random(); // 0 lejos → 1 cerca
+      const x = Math.random() * W;
+      const y = Math.random() * H * 0.98;
+      // atenuar las estrellas de la banda central para que el texto respire
+      const nx = (x - W * 0.5) / (W * 0.42);
+      const ny = (y - H * 0.46) / (H * 0.26);
+      const d = Math.sqrt(nx * nx + ny * ny);
+      const dim = 0.12 + 0.88 * Math.min(1, Math.max(0, (d - 0.55) / 0.7));
+      const bright = Math.random() < 0.08 && dim > 0.75; // glow solo lejos del título
+      stars.push({
+        x,
+        y,
+        z: 0.35 + depth * 0.65,
+        r: (bright ? 1.4 + Math.random() * 1.4 : 0.55 + Math.random() * 1.1) * (0.75 + depth * 0.55),
+        base: 0.18 + Math.random() * 0.26,
+        amp: 0.18 + Math.random() * 0.34,
+        tw: 0.4 + Math.random() * 1.7,
+        ph: Math.random() * Math.PI * 2,
+        dim,
+        bright,
+        c: COLORS[(Math.random() * COLORS.length) | 0],
+      });
+    }
   };
-  gsap.to("[data-hero-copy]", { y: -80, opacity: 0.15, ...parallax });
-  gsap.to(figure, { y: 70, scale: 0.9, opacity: 0.25, ...parallax });
-}
 
-/* Stat rails count up to their value the first time they are seen. */
-function counters() {
-  gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
-    const end = Number(el.dataset.count);
-    if (!Number.isFinite(end)) return;
-    const suffix = el.dataset.countSuffix ?? "";
-    const value = { n: 0 };
+  let mx = 0,
+    my = 0,
+    tmx = 0,
+    tmy = 0;
+  const onMove = (e: PointerEvent) => {
+    const r = canvas.getBoundingClientRect();
+    tmx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    tmy = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  };
+  if (!reduce && finePointer)
+    window.addEventListener("pointermove", onMove, { passive: true });
 
-    gsap.to(value, {
-      n: end,
-      duration: 2,
-      delay: 0.6,
-      ease: "swift",
-      snap: { n: 1 },
-      scrollTrigger: { trigger: el, start: "top 92%", once: true },
-      onUpdate: () => {
-        el.textContent = `${Math.round(value.n)}${suffix}`;
-      },
+  const spawnShoot = () => {
+    const fromLeft = Math.random() < 0.5;
+    const y0 = Math.random() * H * 0.4 + 20;
+    const ang = (fromLeft ? 1 : -1) * (0.18 + Math.random() * 0.16) * Math.PI;
+    const speed = 9 + Math.random() * 6;
+    shoots.push({
+      x: fromLeft ? -40 : W + 40,
+      y: y0,
+      vx: Math.cos(ang) * speed * (fromLeft ? 1 : -1),
+      vy: Math.sin(ang) * speed,
+      len: 90 + Math.random() * 120,
+      life: 0,
+      max: 60 + Math.random() * 30,
     });
-  });
+  };
+  let nextShoot = 90 + Math.random() * 220;
+
+  let t = 0,
+    raf = 0,
+    frame = 0;
+  const draw = () => {
+    t += 0.016;
+    frame++;
+    mx += (tmx - mx) * 0.05;
+    my += (tmy - my) * 0.05;
+    ctx.clearRect(0, 0, W, H);
+
+    for (const s of stars) {
+      const tw = reduce ? s.base : s.base + Math.sin(t * s.tw + s.ph) * s.amp;
+      const a = Math.max(0.03, Math.min(1, tw)) * s.dim;
+      const px = s.x + mx * 14 * s.z;
+      const py = s.y + my * 9 * s.z;
+      if (s.bright) {
+        const g = ctx.createRadialGradient(px, py, 0, px, py, s.r * 6);
+        g.addColorStop(0, s.c);
+        g.addColorStop(0.25, "rgba(180,200,255," + a * 0.5 + ")");
+        g.addColorStop(1, "rgba(180,200,255,0)");
+        ctx.globalAlpha = a;
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(px, py, s.r * 6, 0, 6.2832);
+        ctx.fill();
+        ctx.globalAlpha = Math.min(1, a + 0.15);
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(px, py, s.r * 0.9, 0, 6.2832);
+        ctx.fill();
+      } else {
+        ctx.globalAlpha = a;
+        ctx.fillStyle = s.c;
+        ctx.beginPath();
+        ctx.arc(px, py, s.r, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // estrellas fugaces
+    if (!reduce) {
+      if (frame >= nextShoot) {
+        spawnShoot();
+        nextShoot = frame + 160 + Math.random() * 420;
+      }
+      for (let i = shoots.length - 1; i >= 0; i--) {
+        const sh = shoots[i];
+        sh.x += sh.vx;
+        sh.y += sh.vy;
+        sh.life++;
+        const fade = sh.life < 10 ? sh.life / 10 : Math.max(0, 1 - (sh.life - 10) / (sh.max - 10));
+        const tx = sh.x - (sh.vx / Math.hypot(sh.vx, sh.vy)) * sh.len;
+        const ty = sh.y - (sh.vy / Math.hypot(sh.vx, sh.vy)) * sh.len;
+        const grad = ctx.createLinearGradient(sh.x, sh.y, tx, ty);
+        grad.addColorStop(0, "rgba(255,255,255," + 0.9 * fade + ")");
+        grad.addColorStop(0.4, "rgba(150,180,255," + 0.4 * fade + ")");
+        grad.addColorStop(1, "rgba(150,180,255,0)");
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(sh.x, sh.y);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
+        ctx.globalAlpha = fade;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(sh.x, sh.y, 1.8, 0, 6.2832);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        if (sh.life > sh.max || sh.x < -80 || sh.x > W + 80 || sh.y > H + 80) shoots.splice(i, 1);
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  };
+
+  build();
+  window.addEventListener("resize", build, { passive: true });
+  if (reduce) {
+    draw();
+    cancelAnimationFrame(raf);
+  } else {
+    raf = requestAnimationFrame(draw);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Marquees — the client roster and the stack rails. GSAP drives them instead
-   of a CSS keyframe so they can answer the scroll: they speed up with the
-   page, run backwards when you scroll up, and coast back to their own pace
-   when you stop.
+   Marquees — roster de clientes, filas del stack y testimonios. GSAP los
+   conduce para que respondan al scroll: aceleran con la página, van marcha
+   atrás al subir y vuelven a su ritmo al parar.
    ───────────────────────────────────────────────────────────────────────── */
 function marquees() {
   const tracks = gsap.utils.toArray<HTMLElement>("[data-marquee]");
@@ -248,8 +285,8 @@ function marquees() {
   const loops = tracks.map((track) => {
     const duration = Number(track.dataset.marqueeDuration) || 32;
     const reversed = track.hasAttribute("data-marquee-reverse");
-    /* Each track holds its content twice over, so a -50% travel lands back
-       on an identical frame and the loop has no seam. */
+    /* Cada track lleva su contenido duplicado, así un viaje del -50% aterriza
+       en un frame idéntico y el loop no tiene costura. */
     const tween = gsap.fromTo(
       track,
       { xPercent: reversed ? -50 : 0 },
@@ -297,69 +334,35 @@ function marquees() {
   ScrollTrigger.addEventListener("scrollEnd", settle);
 }
 
-/* The process rail draws itself across the four steps as the section arrives. */
-function processRail() {
-  const rail = document.querySelector<HTMLElement>("[data-rail]");
-  if (!rail) return;
-
-  gsap.from(rail, {
-    scaleX: 0,
-    transformOrigin: "left center",
-    ease: "none",
-    scrollTrigger: {
-      trigger: rail,
-      start: "top 85%",
-      end: "top 40%",
-      scrub: 0.6,
-    },
-  });
-}
-
 /* ─────────────────────────────────────────────────────────────────────────
-   Pointer response — project cards tilt towards the cursor and the mockup
-   inside them lags behind, which is what reads as depth.
+   Spotlight — un glow radial sigue al cursor dentro de cada tarjeta, como
+   en la referencia. Solo con puntero real: en táctil un "hover" se pegaría.
    ───────────────────────────────────────────────────────────────────────── */
-function tilt() {
-  gsap.utils.toArray<HTMLElement>("[data-tilt]").forEach((card) => {
-    const inner = card.querySelector<HTMLElement>("[data-tilt-inner]");
-    const opts = { duration: 0.7, ease: "power3.out" };
-
-    /* Perspective lives on the grid in CSS, not here — the reveal clears every
-       inline property when it finishes, and a shared vanishing point makes the
-       row tilt like one surface anyway. */
-
-    const rotX = gsap.quickTo(card, "rotationX", opts);
-    const rotY = gsap.quickTo(card, "rotationY", opts);
-    const lift = gsap.quickTo(card, "y", opts);
-    const innerX = inner ? gsap.quickTo(inner, "x", opts) : null;
-    const innerY = inner ? gsap.quickTo(inner, "y", opts) : null;
+function spotlight() {
+  document.querySelectorAll<HTMLElement>("[data-spotlight]").forEach((card) => {
+    const glow = document.createElement("div");
+    glow.className = "card-glow";
+    glow.setAttribute("aria-hidden", "true");
+    card.appendChild(glow);
 
     card.addEventListener("pointermove", (e) => {
       const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      rotY(px * 7);
-      rotX(-py * 7);
-      lift(-6);
-      innerX?.(px * -14);
-      innerY?.(py * -10);
+      glow.style.setProperty("--mx", e.clientX - r.left + "px");
+      glow.style.setProperty("--my", e.clientY - r.top + "px");
+      glow.style.opacity = "1";
     });
-
     card.addEventListener("pointerleave", () => {
-      rotX(0);
-      rotY(0);
-      lift(0);
-      innerX?.(0);
-      innerY?.(0);
+      glow.style.opacity = "0";
     });
   });
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Chrome — header, reading progress, scroll-to-top, anchor navigation.
+   Chrome — barra de progreso, scroll-to-top y navegación por anclas.
    ───────────────────────────────────────────────────────────────────────── */
 
-/** Runs for everyone: the button has to work whatever the motion preference. */
+/** Corre para todo el mundo: el botón tiene que funcionar con cualquier
+    preferencia de movimiento. */
 function scrollTopButton(reduced: boolean) {
   const toTop = document.getElementById("scroll-top");
   if (!toTop) return;
@@ -381,10 +384,9 @@ function scrollTopButton(reduced: boolean) {
 }
 
 function chrome() {
-  const header = document.getElementById("site-header");
   const progress = document.getElementById("scroll-progress");
 
-  /* Reading progress across the whole document. */
+  /* Progreso de lectura sobre todo el documento. */
   if (progress) {
     gsap.to(progress, {
       scaleX: 1,
@@ -393,27 +395,10 @@ function chrome() {
     });
   }
 
-  /* The header gets out of the way going down and comes back on the way up.
-     It only starts doing that below 220px, so the fold keeps its nav. */
-  if (header) {
-    ScrollTrigger.create({
-      start: 220,
-      end: "max",
-      onUpdate: (self) =>
-        gsap.to(header, {
-          yPercent: self.direction === 1 ? -110 : 0,
-          duration: 0.45,
-          ease: "swift",
-          overwrite: true,
-        }),
-      onLeaveBack: () => gsap.to(header, { yPercent: 0, duration: 0.3 }),
-    });
-  }
-
-  /* Anchors are tweened rather than handed to `scroll-behavior: smooth` —
-     one easing vocabulary for the page, and the header offset is applied
-     here instead of relying on scroll-margin. (Under reduced motion this
-     never registers, so the browser jumps straight there, as it should.) */
+  /* Los anclas van con tween en vez de `scroll-behavior: smooth` — un solo
+     vocabulario de easing para la página, y el offset del header se aplica
+     aquí. (Con reduced motion esto nunca se registra, así el navegador salta
+     directamente, como debe ser.) */
   document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
     const id = a.getAttribute("href");
     if (!id || id === "#") return;
@@ -440,26 +425,24 @@ const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 scrollTopButton(reduced);
 
-/* Everything below is motion for its own sake. Users who asked for less get
-   the page in its finished state — the stylesheet's reduced-motion block
-   already pins every revealed element open. */
+/* El cielo corre para todos — con reduced-motion pinta un frame estático. */
+sky();
+
+/* Todo lo de abajo es movimiento por el movimiento mismo. Quien pidió menos
+   recibe la página en su estado final — el bloque de reduced-motion de la
+   hoja ya deja cada elemento revelado abierto. */
 mm.add("(prefers-reduced-motion: no-preference)", () => {
   reveals();
-  splitHeadlines();
-  hero();
-  counters();
   marquees();
-  processRail();
   chrome();
 
-  /* Fonts land after first paint and change where the lines break. */
+  /* Las fuentes aterrizan tras el primer paint y cambian los quiebres. */
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
 });
 
-/* Pointer effects only where there is a real pointer — on touch, a "hover"
-   tilt would stick after the tap. */
+/* Efectos de puntero solo donde hay un puntero de verdad. */
 mm.add("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
-  tilt();
+  spotlight();
 });
 
 document.documentElement.setAttribute("data-motion-ready", "");

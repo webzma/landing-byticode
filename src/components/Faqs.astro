@@ -1,23 +1,49 @@
 ---
 import SectionHeader from './SectionHeader.astro';
-import { FaqsAccordion } from './FaqsAccordion';
+
+const faqs = [
+  {
+    question: "¿Qué tipo de proyectos realizan?",
+    answer:
+      "Desarrollamos sitios web, aplicaciones web y móviles, identidades de marca y consultoría técnica. Cada proyecto se adapta a tus necesidades específicas.",
+  },
+  {
+    question: "¿Cuánto tarda un proyecto típico?",
+    answer:
+      "Depende del alcance: una landing page puede estar lista en 2-4 semanas; un proyecto más complejo puede llevar 2-3 meses. Te damos estimaciones claras desde el inicio.",
+  },
+  {
+    question: "¿Trabajan con empresas fuera de Venezuela?",
+    answer:
+      "Sí. Trabajamos de forma remota con clientes en toda Europa y Latinoamérica. Las reuniones se organizan en horarios que funcionen para ambos.",
+  },
+  {
+    question: "¿Cómo empiezo?",
+    answer:
+      "Reserva una llamada gratuita con nosotros. Hablaremos de tu proyecto, objetivos y cómo podemos ayudarte. Sin compromiso.",
+  },
+];
 ---
 
-<section id="faqs" class="bg-black py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
-  <div class="max-w-[1080px] mx-auto">
+<section id="faqs" class="section section--slim">
+  <SectionHeader
+    eyebrow="FAQ"
+    title="Preguntas frecuentes"
+    description="Resolvemos las dudas más comunes antes de que las preguntes."
+    headingId="faqs-heading"
+    class="mb-12"
+  />
 
-    <SectionHeader
-      eyebrow="FAQ"
-      title="Preguntas frecuentes"
-      description="Resolvemos las dudas más comunes antes de que las preguntes."
-      headingId="faqs-heading"
-      class="mb-14 max-[640px]:mb-10"
-    />
-
-    <!-- The answers sit on one narrow centred column under the heading -->
-    <div class="mx-auto max-w-[760px]" data-reveal data-reveal-delay="3">
-      <FaqsAccordion client:load />
-    </div>
-
+  <!-- Acordeón nativo details/summary, como la referencia: sin JS, siempre accesible -->
+  <div class="flex flex-col gap-3">
+    {faqs.map((faq, i) => (
+      <details class="faq-item" data-reveal style={`--rd:${i * 60}ms`}>
+        <summary>
+          {faq.question}
+          <span class="faq-plus" aria-hidden="true">+</span>
+        </summary>
+        <p>{faq.answer}</p>
+      </details>
+    ))}
   </div>
 </section>

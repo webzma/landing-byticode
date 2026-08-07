@@ -7,8 +7,8 @@ const projects = [
     name: 'Nexara Studio',
     tag: 'Web · Branding',
     description: 'Identidad visual completa y sitio web para un estudio creativo de arquitectura.',
-    glowColor: 'var(--glow-lg)',
-    accentColor: 'oklch(0.55 0.22 245 / 30%)',
+    glow: 'rgba(47,107,255,0.38)',
+    accent: 'rgba(47,107,255,0.30)',
     link: '#contact',
   },
   {
@@ -16,8 +16,8 @@ const projects = [
     name: 'FlowSync App',
     tag: 'App · UI/UX',
     description: 'Aplicación de gestión de tareas con diseño minimalista y experiencia fluida.',
-    glowColor: 'var(--glow-md)',
-    accentColor: 'oklch(0.55 0.22 245 / 20%)',
+    glow: 'rgba(106,59,255,0.30)',
+    accent: 'rgba(106,59,255,0.28)',
     link: '#contact',
   },
   {
@@ -25,103 +25,91 @@ const projects = [
     name: 'Prismacore',
     tag: 'Web · Consultoría',
     description: 'Plataforma SaaS con rediseño completo de la experiencia de usuario.',
-    glowColor: 'var(--glow-xl)',
-    accentColor: 'oklch(0.55 0.22 245 / 40%)',
+    glow: 'rgba(31,170,201,0.26)',
+    accent: 'rgba(31,170,201,0.26)',
     link: '#contact',
   },
 ];
 ---
 
-<section id="work" class="bg-background py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
-  <div class="max-w-[1080px] mx-auto">
+<section id="work" class="section">
+  <SectionHeader
+    eyebrow="Proyectos"
+    title="Proyectos destacados"
+    class="mb-16 max-[640px]:mb-10">
+  </SectionHeader>
 
-    <SectionHeader
-      eyebrow="Proyectos"
-      title="Proyectos destacados"
-      class="mb-16 max-[640px]:mb-10">
-    </SectionHeader>
+  <div class="grid grid-cols-3 gap-5 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1">
+    {projects.map((p, i) => (
+      <a
+        href={p.link}
+        class="card group flex flex-col no-underline"
+        data-reveal
+        data-spotlight
+        style={`--rd:${i * 60}ms`}
+        aria-label={`Ver proyecto ${p.name}`}
+      >
+        <!-- Área visual del proyecto -->
+        <div class="relative h-[190px] overflow-hidden border-b border-white/[0.07]">
+          <div
+            class="absolute inset-0 pointer-events-none"
+            style={`background: radial-gradient(ellipse at 30% 50%, ${p.glow} 0%, transparent 68%)`}
+            aria-hidden="true"
+          ></div>
+          <!-- Textura de rejilla sutil -->
+          <div
+            class="absolute inset-0 opacity-[0.025] pointer-events-none"
+            style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 36px 36px;"
+            aria-hidden="true"
+          ></div>
+          <!-- Mock UI -->
+          <div class="absolute inset-0 p-4 flex flex-col gap-3">
+            <div class="flex items-center gap-[5px]">
+              <div class="w-2 h-2 rounded-full bg-white/15"></div>
+              <div class="w-2 h-2 rounded-full bg-white/15"></div>
+              <div class="w-2 h-2 rounded-full bg-white/15"></div>
+              <div class="flex-1 h-[16px] rounded bg-white/6 border border-white/8 ml-2"></div>
+            </div>
+            <div class="flex flex-col gap-2 mt-1">
+              <div class="h-5 w-3/4 rounded bg-white/10"></div>
+              <div class="h-3 w-1/2 rounded bg-white/6"></div>
+              <div class="flex gap-2 mt-1">
+                <div class="h-8 w-20 rounded-md" style={`background: ${p.accent}; border: 1px solid rgba(255,255,255,0.1)`}></div>
+                <div class="h-8 flex-1 rounded-md bg-white/4 border border-white/8"></div>
+              </div>
+              <div class="h-3 w-5/6 rounded bg-white/5 mt-1"></div>
+              <div class="h-3 w-2/3 rounded bg-white/4"></div>
+            </div>
+          </div>
+        </div>
 
-    <div class="mb-10 flex justify-center max-[640px]:mb-8" data-reveal="soft" data-reveal-delay="3">
-      <a href="#contact" class="group inline-flex items-center gap-2 text-[0.875rem] font-medium text-white/45 hover:text-white transition-colors duration-300 ease-soft">
-        Trabajemos juntos
-        <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true" class="transition-transform duration-300 ease-soft group-hover:translate-x-0.5">
-          <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <!-- Info -->
+        <div class="relative z-10 flex flex-1 flex-col p-6">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-[0.6875rem] font-medium uppercase tracking-[0.07em] text-[#6f6f77]">{p.tag}</span>
+            <span class="font-mono text-[0.6875rem] text-[#6f6f77]/60">{p.number}</span>
+          </div>
+          <h3 class="mb-2 text-[18.5px] font-medium tracking-[-0.01em] text-[#f1f1f4]">{p.name}</h3>
+          <p class="m-0 flex-1 text-[14.5px] font-light leading-[1.6] text-[#9a9aa1]">{p.description}</p>
+          <div class="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-4">
+            <span class="text-[0.75rem] text-[#6f6f77]">Ver proyecto</span>
+            <div class="flex h-6 w-6 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors duration-200 group-hover:border-white/25 group-hover:text-white/65">
+              <svg width="10" height="10" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
       </a>
-    </div>
+    ))}
+  </div>
 
-    <!-- One vanishing point for the whole row, so the three cards tilt like
-         panels of a single surface instead of three separate boxes -->
-    <div
-      class="grid grid-cols-3 gap-5 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-4"
-      style="perspective: 1400px">
-      {projects.map((p, i) => (
-        <a
-          href={p.link}
-          class="group relative rounded-[16px] overflow-hidden border border-white/10 flex flex-col transition-[border-color] duration-500 ease-soft hover:border-white/20 no-underline"
-          data-reveal
-          data-tilt
-          style={`--rd:${i * 90}ms`}
-          aria-label={`Ver proyecto ${p.name}`}
-        >
-          <!-- Browser mockup area -->
-          <div class="relative h-[190px] overflow-hidden border-b border-white/[0.07]">
-            <!-- Background glow -->
-            <div
-              class="absolute inset-0 pointer-events-none"
-              style={`background: radial-gradient(ellipse at 30% 50%, ${p.glowColor} 0%, transparent 68%)`}
-              aria-hidden="true"
-            ></div>
-            <!-- Subtle grid texture -->
-            <div
-              class="absolute inset-0 opacity-[0.025] pointer-events-none"
-              style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 36px 36px;"
-              aria-hidden="true"
-            ></div>
-            <!-- Browser chrome. Lags behind the card's tilt, which is what
-                 reads as depth rather than as a rotating rectangle. -->
-            <div class="absolute inset-0 p-4 flex flex-col gap-3" data-tilt-inner>
-              <!-- Title bar with dots -->
-              <div class="flex items-center gap-[5px]">
-                <div class="w-2 h-2 rounded-full bg-white/15"></div>
-                <div class="w-2 h-2 rounded-full bg-white/15"></div>
-                <div class="w-2 h-2 rounded-full bg-white/15"></div>
-                <div class="flex-1 h-[16px] rounded bg-white/6 border border-white/8 ml-2"></div>
-              </div>
-              <!-- Mock UI content -->
-              <div class="flex flex-col gap-2 mt-1">
-                <div class="h-5 w-3/4 rounded bg-white/10"></div>
-                <div class="h-3 w-1/2 rounded bg-white/6"></div>
-                <div class="flex gap-2 mt-1">
-                  <div class="h-8 w-20 rounded-md" style={`background: ${p.accentColor}; border: 1px solid rgba(255,255,255,0.1)`}></div>
-                  <div class="h-8 flex-1 rounded-md bg-white/4 border border-white/8"></div>
-                </div>
-                <div class="h-3 w-5/6 rounded bg-white/5 mt-1"></div>
-                <div class="h-3 w-2/3 rounded bg-white/4"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Info area -->
-          <div class="relative z-10 p-6 flex flex-col flex-1">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-[0.6875rem] font-semibold tracking-[0.07em] uppercase text-white/35">{p.tag}</span>
-              <span class="text-[0.6875rem] text-white/20 font-['Courier_New',monospace]">{p.number}</span>
-            </div>
-            <h3 class="text-[1.125rem] font-bold tracking-[-0.025em] text-white mb-2">{p.name}</h3>
-            <p class="text-[0.875rem] text-white/50 leading-[1.55] m-0 flex-1">{p.description}</p>
-            <div class="mt-4 pt-4 border-t border-white/[0.07] flex items-center justify-between">
-              <span class="text-[0.75rem] text-white/30">Ver proyecto</span>
-              <div class="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-white/35 group-hover:text-white/65 group-hover:border-white/25 transition-colors duration-200">
-                <svg width="10" height="10" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-                  <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </a>
-      ))}
-    </div>
-
+  <div class="mt-10 flex justify-center" data-reveal="soft">
+    <a href="#contact" class="group inline-flex items-center gap-2 text-[0.875rem] font-normal text-[#9a9aa1] no-underline transition-colors duration-300 hover:text-white">
+      Trabajemos juntos
+      <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-0.5">
+        <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
   </div>
 </section>

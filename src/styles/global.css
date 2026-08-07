@@ -1,15 +1,14 @@
-/* Hallmark · pre-emit critique: P4 H5 E5 S4 R4 V4
- * genre: modern-minimal · macrostructure: Split Studio · hero: H2 Split diptych
- *   H2 knobs: ratio=7/5 · right-side=H9 orbit figure (was: proof column)
- *             · divider=hairline horizon rule (was: vertical rule)
- *             · light source=bottom edge (was: upper-left)
- * theme: project system (dark blue-tinted paper · DM Sans display+body · mono micro-labels
- *   · accent oklch(0.68 0.18 245))
- * enrichment: Tier-B hand-built SVG — orbit rings around the Byticode mark
- *   (Tier-A canvas retained: tinted descent + single-hue bottom bloom + feTurbulence grain)
- * scope: hero section only · nav + footer untouched
- * tone: technical · confident · restrained
- * contrast: pass (40–41) · mobile: pass (34, 49, 50–57) · tokens: pass (48) · slop: pass (42–45)
+/* Hallmark · pre-emit critique: P4 H4 E5 S4 R4 V4
+ * macrostructure: reference replication · genre: atmospheric
+ * theme: studied-DNA (source: "Byticode Striv.dc.html" — diseño propio del usuario)
+ *   paper #08080a · surface #0d0d10 · accent #2f6bff (+#6a3bff violeta, #1faac9 cian)
+ *   display+body: Bricolage Grotesque (300/400/500)
+ * observed patterns: nav sticky que se condensa · hero centrado con cielo
+ *   estrellado en canvas + aurora + grano · tarjetas #0d0d10 con glow radial
+ *   difuminado y spotlight al cursor · tags pill · titulares light 300 ·
+ *   marquee de testimonios con máscara · FAQ details/summary · CTA panel
+ * scope: sitio completo (rediseño global solicitado por el usuario)
+ * contrast: pass · mobile: pass (overflow-x clip, grids colapsan) · tokens: pass
  */
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -56,132 +55,98 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  /* Typography */
-  --font-sans: "DM Sans", system-ui, sans-serif;
-  --font-display: "DM Serif Display", Georgia, serif;
+  /* Typography — una sola familia con tres pesos, como la referencia */
+  --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
-  /* Hairline + brand-ink utilities (border-hairline, text-brand) */
+  /* Utilities usadas por componentes (border-hairline, text-brand, bg-accent) */
   --color-hairline: var(--hairline);
   --color-hairline-strong: var(--hairline-strong);
   --color-brand: var(--brand-text);
-  /* Custom animations */
-  --animate-pulse-dot: pulse-dot 2.2s ease-in-out infinite;
-  --animate-spin-slow: spin-slow 26s linear infinite;
-  --animate-orbit-dot: orbit-dot 10s linear infinite;
-  --animate-orbit-dot-reverse: orbit-dot-reverse 16s linear infinite;
-  /* Motion curves — long, soft-landing eases. Everything on the page moves on
-     one of these three; nothing uses a browser default. */
-  --ease-soft: cubic-bezier(0.12, 0.23, 0.17, 0.99);
+  /* Motion curves */
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-glide: cubic-bezier(0.12, 0.23, 0.5, 1);
   --ease-swift: cubic-bezier(0.35, 0, 0, 1);
+  --animate-pulse-dot: pulse-dot 2.2s ease-in-out infinite;
 }
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.07 0.01 240);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.12 0.02 245);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.12 0.02 245);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.97 0 0);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.16 0.025 245);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.16 0.025 245);
-  --muted-foreground: oklch(0.65 0.01 240);
-  --accent: oklch(0.45 0.19 245);
-  --accent-foreground: oklch(0.97 0 0);
+
+  /* Tipografía y curvas — duplicadas aquí (además de @theme) para que
+     var(--font-sans) / var(--ease-*) resuelvan siempre en CSS propio */
+  --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-glide: cubic-bezier(0.12, 0.23, 0.5, 1);
+  --ease-swift: cubic-bezier(0.35, 0, 0, 1);
+
+  /* ── Paleta de la referencia (Byticode Striv.dc) ───────────────────── */
+  --bg: #08080a;
+  --surface: #0d0d10; /* tarjetas */
+  --surface-2: #0b0b0e; /* panel CTA */
+  --surface-3: #0c0c0f; /* tarjetas de proceso */
+  --text: #ededf0;
+  --text-strong: #f1f1f4;
+  --text-soft: #c4c4cc;
+  --muted: #9a9aa1;
+  --muted-2: #8b8b92;
+  --faint: #6f6f77;
+  --link: #b3b3ba;
+  --accent: #2f6bff;
+  --accent-hover: #3f78ff;
+  --accent-2: #6a3bff;
+  --accent-3: #1faac9;
+  --accent-soft: #8ab0ff; /* checks, plus, iconos */
+  --accent-ink: #9cc0ff; /* iconos grandes de proceso */
+  --star: #ffc34d;
+  --hairline: rgba(255, 255, 255, 0.07);
+  --hairline-strong: rgba(255, 255, 255, 0.12);
+  --icon-box-bg: rgba(47, 107, 255, 0.14);
+  --icon-box-border: rgba(47, 107, 255, 0.3);
+  --brand-text: var(--accent-soft);
+  --status-online: #22c55e;
+  /* Grano de película — mata la planitud sintética del gradiente */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* shadcn tokens remapeados a la paleta (los componentes ui quedan en desuso,
+     pero las utilidades de Tailwind siguen resolviendo) */
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary: var(--text);
+  --primary-foreground: #0a0a0c;
+  --secondary: var(--surface);
+  --secondary-foreground: var(--text);
+  --muted-foreground: var(--muted);
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.55 0.05 245);
+  --border: rgba(255, 255, 255, 0.07);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: var(--accent);
   --chart-1: oklch(0.488 0.243 245);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 285);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.12 0.02 245);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.55 0.22 245);
-  --sidebar-primary-foreground: oklch(0.97 0 0);
-  --sidebar-accent: oklch(0.16 0.025 245);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.55 0.05 245);
-  /* Glow layers — decorative backgrounds and shadow effects */
-  --glow-xs: oklch(0.42 0.22 245 / 8%);
-  --glow-sm: oklch(0.42 0.22 245 / 18%);
-  --glow-md: oklch(0.42 0.22 245 / 28%);
-  --glow-lg: oklch(0.42 0.22 245 / 38%);
-  --glow-xl: oklch(0.42 0.22 245 / 45%);
-  --glow-2xl: oklch(0.42 0.22 245 / 55%);
-  --glow-3xl: oklch(0.65 0.2 245 / 70%);
-  /* Brand icon box colors */
-  --brand-icon-bg: oklch(0.38 0.2 245 / 22%);
-  --brand-icon-border: oklch(0.5 0.2 245 / 28%);
-  --brand-icon-color: oklch(0.72 0.18 245);
-  --brand-text: oklch(0.68 0.18 245);
-  /* Status indicator */
-  --status-online: #22c55e;
-  /* Hairlines — the hero's only divider language */
-  --hairline: oklch(1 0 0 / 9%);
-  --hairline-strong: oklch(1 0 0 / 16%);
-  /* Hero canvas — two-stop tinted descent that lands on the black of the next
-     section, so the seam disappears. No saturated flood, no aurora blobs. */
-  --hero-gradient: linear-gradient(
-    180deg,
-    oklch(0.13 0.045 252) 0%,
-    oklch(0.1 0.032 250) 30%,
-    oklch(0.07 0.018 247) 62%,
-    oklch(0.03 0.006 245) 86%,
-    oklch(0 0 0) 100%
-  );
-  /* Light from below. The bloom sits low and wide so it reads as a horizon
-     behind the stat rail, not as a blob floating behind the headline. One hue
-     only — a second hue here is what turns a canvas into the purple-gradient
-     hero. The black stop rides on top so the seam with the next (pure black)
-     section stays invisible even at the bloom's brightest. */
-  --hero-veil:
-    linear-gradient(
-      180deg,
-      transparent 66%,
-      oklch(0 0 0 / 40%) 88%,
-      oklch(0 0 0) 100%
-    ),
-    radial-gradient(
-      88% 46% at 50% 76%,
-      oklch(0.6 0.21 250 / 52%) 0%,
-      oklch(0.52 0.2 250 / 20%) 38%,
-      transparent 70%
-    ),
-    radial-gradient(
-      64% 46% at 4% 2%,
-      oklch(0.45 0.19 250 / 13%) 0%,
-      transparent 58%
-    );
-  /* Orbit figure — hairline rings, brand-lit core. Drawn, not decorated. */
-  --orbit-ring: oklch(1 0 0 / 26%);
-  --orbit-ring-soft: oklch(1 0 0 / 11%);
-  --orbit-node: oklch(0.78 0.16 250);
-  --orbit-core: radial-gradient(
-    circle at center,
-    oklch(0.58 0.21 250 / 40%) 0%,
-    oklch(0.45 0.19 250 / 14%) 42%,
-    transparent 74%
-  );
-  /* Film grain — kills the synthetic flatness of a pure CSS gradient */
-  --hero-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--text);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--surface);
+  --sidebar-accent-foreground: var(--text);
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --sidebar-ring: var(--accent);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  /* No `scroll-behavior: smooth` — anchor travel is a GSAP ScrollTo tween
-     (motion.ts), and the two cannot share the scroll position. The property
-     is restored below for anyone the motion layer never reaches. */
-  /* The header is fixed — anchored sections must clear it */
+  /* El header es sticky — las secciones ancladas deben quedar por debajo */
   :where([id]) {
     scroll-margin-top: 6rem;
   }
@@ -190,18 +155,308 @@
     margin: 0;
     width: 100%;
     min-height: 100%;
-    /* clip, not hidden — hidden silently breaks position:sticky descendants */
+    /* clip, not hidden — hidden rompe position:sticky */
     overflow-x: clip;
+    background: var(--bg);
     font-family: var(--font-sans);
   }
   body {
-    @apply bg-background text-foreground;
+    color: var(--text);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
   }
-  /* Visible keyboard focus ring for all interactive elements */
+  ::selection {
+    background: rgba(47, 107, 255, 0.35);
+  }
+  /* Anillo de foco visible para teclado */
   :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
-    outline: 2px solid var(--brand-text);
+    outline: 2px solid var(--accent-soft);
     outline-offset: 3px;
     border-radius: 4px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Estructura de sección — el ritmo de la referencia: tag pill, titular
+   light centrado, subtítulo, y la rejilla de tarjetas debajo.
+   ───────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .section {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 130px 40px 0;
+  }
+  .section--first {
+    padding-top: 90px;
+  }
+  .section--narrow {
+    max-width: 1080px;
+  }
+  .section--slim {
+    max-width: 820px;
+  }
+
+  .section-head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--text-soft);
+    padding: 7px 16px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 26px;
+  }
+  .section-title {
+    font-weight: 300;
+    font-size: clamp(30px, 3.8vw, 50px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0 auto 16px;
+    color: var(--text-strong);
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+  .section-sub {
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── Tarjetas: #0d0d10, hairline, radio 18, glow radial difuminado ── */
+  .card {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 18px;
+  }
+  /* Blob de glow en esquina, difuminado — firma visual de la referencia */
+  .card-glow-blob {
+    position: absolute;
+    pointer-events: none;
+    filter: blur(34px);
+  }
+  /* Spotlight que sigue al cursor (lo inyecta motion.ts) */
+  .card-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      300px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(120, 150, 255, 0.14),
+      transparent 60%
+    );
+    z-index: 1;
+  }
+
+  /* ── Botones ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    background: var(--text);
+    color: #0a0a0c;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.5),
+      0 18px 40px -16px rgba(120, 150, 255, 0.5);
+    transition: background 0.25s ease;
+  }
+  .btn-primary:hover {
+    background: #ffffff;
+  }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 15px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: 1px solid var(--hairline-strong);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.25s ease;
+  }
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Caja de icono azul (beneficios / servicios) */
+  .icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--icon-box-bg);
+    border: 1px solid var(--icon-box-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-soft);
+    flex-shrink: 0;
+  }
+
+  /* ── FAQ nativo (details/summary, como la referencia) ── */
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 4px 24px;
+  }
+  .faq-item > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 0;
+    font-weight: 400;
+    font-size: 16.5px;
+    color: var(--text);
+  }
+  .faq-item > summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-plus {
+    flex-shrink: 0;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--accent-soft);
+    line-height: 1;
+    transition: transform 0.28s ease;
+  }
+  .faq-item[open] .faq-plus {
+    transform: rotate(45deg);
+  }
+  .faq-item > p {
+    font-weight: 300;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 0;
+    padding: 0 0 20px;
+  }
+
+  /* Máscara de bordes para marquees — el loop no muestra costura */
+  .marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  /* ── Scroll reveal: la hoja posee el estado previo, GSAP el viaje ── */
+  [data-reveal] {
+    opacity: 0.001;
+    transform: translateY(26px);
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  [data-reveal="soft"] {
+    transform: translateY(16px);
+  }
+  [data-reveal="fade"] {
+    transform: none;
+  }
+  [data-reveal="zoom"] {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+
+  /* ── Sin la capa de movimiento (JS off o bundle fallido) ── */
+  html:not(.js-motion),
+  html.motion-failed {
+    scroll-behavior: smooth;
+  }
+  html:not(.js-motion) [data-reveal],
+  html.motion-failed [data-reveal] {
+    transition:
+      opacity 0.7s var(--ease-soft) var(--rd, 0ms),
+      transform 0.7s var(--ease-soft) var(--rd, 0ms);
+  }
+  html:not(.js-motion) [data-reveal],
+  html.motion-failed [data-reveal],
+  .motion-failed [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  [data-reveal-delay="1"] { --rd: 60ms; }
+  [data-reveal-delay="2"] { --rd: 120ms; }
+  [data-reveal-delay="3"] { --rd: 180ms; }
+  [data-reveal-delay="4"] { --rd: 240ms; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Barra de progreso de lectura — 2px, gradiente azul → violeta
+   ───────────────────────────────────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Header sticky que se condensa al hacer scroll (la referencia)
+   ───────────────────────────────────────────────────────────────────────── */
+#site-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+#site-header.scrolled {
+  background: rgba(8, 8, 10, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--hairline);
+}
+
+/* Keyframes del hero / status */
+@keyframes byti-drift {
+  0%,
+  100% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -3%) scale(1.08);
   }
 }
 
@@ -217,224 +472,14 @@
   }
 }
 
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes orbit-dot {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes orbit-dot-reverse {
-  from {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(-180deg);
-  }
-}
-
-/* The marquee keyframes that used to live here are gone: both rails (client
-   roster, stack rows) now travel on GSAP so they can answer the scroll. */
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Scroll reveal
-   The stylesheet owns the *state* — elements sit 40px low, under a 10px blur,
-   until they are released. GSAP owns the *travel*: it animates them in from
-   here and adds `.is-visible` when it lands (motion.ts, reveals()).
-
-   These rules are layered so a card's own Tailwind utilities still win —
-   `transform: none` below would otherwise outrank `hover:-translate-y-1` and
-   kill the lift on every card that also reveals.
-   ───────────────────────────────────────────────────────────────────────── */
-@layer components {
-  [data-reveal] {
-    opacity: 0.001;
-    transform: translateY(40px);
-    filter: blur(10px);
-  }
-  [data-reveal].is-visible {
-    opacity: 1;
-    transform: none;
-    /* `none`, not `blur(0)` — a lingering filter would keep every revealed
-       section on its own compositing layer for the rest of the session */
-    filter: none;
-  }
-
-  /* Shorter rise for dense stacks (list rows, nav columns, small type) */
-  [data-reveal="soft"] {
-    transform: translateY(20px);
-    filter: blur(4px);
-  }
-
-  /* Panels and imagery settle out of a 5% overscale instead of rising */
-  [data-reveal="zoom"] {
-    opacity: 1;
-    transform: scale(1.05);
-    filter: none;
-  }
-
-  /* Opacity only — for anything already anchored in place */
-  [data-reveal="fade"] {
-    transform: none;
-    filter: none;
-  }
-
-  /* Split headlines are cut into masked lines at runtime. Hidden until then,
-     so the unsplit block never flashes in ahead of its own animation. */
-  .js-motion [data-split] {
-    visibility: hidden;
-  }
-
-  /* ── Without the motion layer ──
-     `.js-motion` goes on before first paint, so its absence means scripts are
-     off; `.motion-failed` means the bundle never reported in (blocked, stale
-     cache, parse error). Either way the page shows itself, on a transition
-     rather than a jump cut, and hands anchors back to the browser. */
-  html:not(.js-motion),
-  html.motion-failed {
-    scroll-behavior: smooth;
-  }
-
-  html:not(.js-motion) [data-reveal],
-  html.motion-failed [data-reveal] {
-    transition: opacity 1s var(--ease-soft) var(--rd, 0ms),
-      transform 1s var(--ease-soft) var(--rd, 0ms),
-      filter 1s var(--ease-soft) var(--rd, 0ms);
-  }
-
-  .motion-failed [data-reveal] {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-  .motion-failed [data-split] {
-    visibility: visible;
-  }
-
-  /* Legacy numeric stagger — still drives the fallback transition above */
-  [data-reveal-delay="1"] { --rd: 90ms; }
-  [data-reveal-delay="2"] { --rd: 180ms; }
-  [data-reveal-delay="3"] { --rd: 270ms; }
-  [data-reveal-delay="4"] { --rd: 360ms; }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Reading progress — a single hairline of brand ink across the top edge,
-   scaled by GSAP against total document height.
-   ───────────────────────────────────────────────────────────────────────── */
-#scroll-progress {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 60;
-  height: 2px;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  background: linear-gradient(
-    90deg,
-    var(--accent) 0%,
-    var(--brand-text) 55%,
-    oklch(0.86 0.09 250) 100%
-  );
-  pointer-events: none;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Load-time entrance — hero only. These run on paint, not on intersection,
-   so the fold is never blank waiting for an observer.
-   ───────────────────────────────────────────────────────────────────────── */
-@keyframes rise-in {
-  from {
-    opacity: 0.001;
-    transform: translateY(40px);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
-}
-
-@keyframes word-in {
-  from {
-    opacity: 0.001;
-    transform: translateY(12px);
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
-}
-
-@keyframes char-in {
-  from {
-    opacity: 0.001;
-    transform: translateY(20px);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
-}
-
-@keyframes zoom-in {
-  from {
-    transform: scale(1.05);
-  }
-  to {
-    transform: none;
-  }
-}
-
-.anim-rise {
-  animation: rise-in 1.2s var(--ease-soft) both;
-  animation-delay: var(--d, 0s);
-}
-
-.anim-zoom {
-  animation: zoom-in 2s var(--ease-glide) both;
-  animation-delay: var(--d, 0s);
-}
-
-.anim-word {
-  display: inline-block;
-  animation: word-in 0.9s var(--ease-soft) both;
-  animation-delay: calc(var(--d, 0.15s) + var(--i) * 0.05s);
-}
-
-.anim-char {
-  display: inline-block;
-  animation: char-in 0.8s var(--ease-soft) both;
-  animation-delay: calc(var(--d, 0.5s) + var(--i) * 0.012s);
-}
-
-/* Keeps a character-split word from breaking mid-word at a line end */
-.anim-nowrap {
-  display: inline-block;
-  white-space: nowrap;
-}
-
 /* Scroll to top button */
 #scroll-top {
   opacity: 0;
   pointer-events: none;
   transform: translateY(8px);
-  transition: opacity 0.4s var(--ease-soft), transform 0.4s var(--ease-soft);
+  transition:
+    opacity 0.4s var(--ease-soft),
+    transform 0.4s var(--ease-soft);
 }
 #scroll-top.visible {
   opacity: 1;
@@ -442,19 +487,30 @@
   transform: translateY(0);
 }
 
-/* Header scroll state — solidifies for legibility once the page scrolls */
-#site-header {
-  transition: background-color 0.4s var(--ease-soft),
-    border-color 0.4s var(--ease-soft), box-shadow 0.4s var(--ease-soft);
-  border-bottom: 1px solid transparent;
+/* ─────────────────────────────────────────────────────────────────────────
+   Responsive — la referencia colapsa todo a una columna en móvil
+   ───────────────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .section {
+    padding: 100px 24px 0;
+  }
+  .section--first {
+    padding-top: 72px;
+  }
 }
-#site-header.scrolled {
-  background: oklch(0.07 0.01 240 / 72%);
-  border-bottom-color: oklch(1 0 0 / 8%);
-  box-shadow: 0 8px 30px -12px oklch(0 0 0 / 60%);
+@media (max-width: 640px) {
+  .section {
+    padding: 84px 20px 0;
+  }
+  .section--first {
+    padding-top: 64px;
+  }
+  .section-head {
+    margin-bottom: 40px;
+  }
 }
 
-/* Respect users who prefer reduced motion */
+/* Respeta a quien prefiere menos movimiento */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -469,23 +525,8 @@
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
-    filter: none !important;
-  }
-  /* motion.ts sits out entirely under this preference, so the split never
-     happens — the headline has to show itself. */
-  [data-split] {
-    visibility: visible !important;
   }
   #scroll-progress {
     display: none;
-  }
-  .anim-rise,
-  .anim-zoom,
-  .anim-word,
-  .anim-char {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
   }
 }

@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-08-07",
+    "macrostructure": "reference replication",
+    "genre": "atmospheric",
+    "theme": "studied-DNA (source: Byticode Striv.dc.html — diseño propio del usuario)",
+    "theme_axes": "dark / grotesk-light (Bricolage Grotesque 300) / cool",
+    "nav": "sticky que se condensa al scroll (referencia)",
+    "footer": "4 columnas (marca 1.6fr + Secciones/Servicios/Contacto) + barra inferior",
+    "enrichment": "canvas starfield con parallax + estrellas fugaces (portado de la referencia) · aurora blobs · grain",
+    "scope": "sitio completo — rediseño global copiando el diseño del archivo de referencia, conservando todas las secciones y contenido de negocio",
+    "brief": "Byticode — copiar diseño/UI de Byticode Striv.dc.html a todo el sitio Astro sin eliminar secciones"
+  },
+  {
     "date": "2026-07-28",
     "macrostructure": "Split Studio",
     "genre": "modern-minimal",

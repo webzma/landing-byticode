@@ -26,138 +26,47 @@ const testimonials = [
 ];
 ---
 
-<section class="bg-background py-28 px-6 max-[900px]:py-20 max-[640px]:py-16 max-[640px]:px-5">
-  <div class="max-w-[1080px] mx-auto">
-
+<section id="testimonials" class="relative overflow-hidden pt-[130px] max-[900px]:pt-[100px] max-[640px]:pt-[84px]">
+  <div class="mx-auto max-w-[1200px] px-10 max-[900px]:px-6 max-[640px]:px-5">
     <SectionHeader
       eyebrow="Testimonios"
       title="Lo que dicen nuestros clientes"
       description="Proyectos reales, resultados reales."
-      class="mb-16 max-[640px]:mb-10"
     />
+  </div>
 
-    <!-- A snapping rail instead of a static grid: one quote holds the eye at a time -->
-    <div data-reveal data-reveal-delay="2">
-      <div
-        id="testimonial-track"
-        class="testimonial-track flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 max-[640px]:gap-4"
-        tabindex="0"
-        role="group"
-        aria-label="Testimonios de clientes">
-        {/* Cards run wider than a third of the rail so the next one always peeks
-            in — the row reads as a track to drag, not a finished grid */}
-        {testimonials.map((t, i) => (
-          <article class="testimonial-card group flex shrink-0 basis-[38%] flex-col snap-start rounded-[16px] border border-white/10 bg-white/4 p-7 transition-[background-color,border-color,transform] duration-500 ease-soft hover:-translate-y-1 hover:border-white/15 hover:bg-white/[0.06] max-[1100px]:basis-[58%] max-[640px]:basis-[88%]">
-            <div class="mb-4 flex items-start justify-between">
-              {/* Quote mark */}
-              <span class="select-none font-serif text-[2.5rem] leading-none" style="color: var(--brand-text)" aria-hidden="true">&ldquo;</span>
-              <span class="font-mono text-[0.6875rem] tracking-[0.14em] text-white/25 tabular-nums" aria-hidden="true">
-                {i + 1}/{testimonials.length}
-              </span>
+  <!-- Marquee infinito con máscara de bordes, como la referencia. Cuatro
+       copias para que cada mitad del track supere el viewport más ancho. -->
+  <div class="marquee-mask overflow-hidden" data-reveal>
+    <div
+      class="marquee-track flex gap-5"
+      data-marquee
+      data-marquee-duration="44">
+      {[...testimonials, ...testimonials, ...testimonials, ...testimonials].map((t) => (
+        <article class="w-[380px] max-w-[84vw] shrink-0 rounded-[18px] border border-white/[0.07] bg-[#0d0d10] p-7">
+          <p class="m-0 mb-[22px] text-[15px] font-light leading-[1.65] text-[#d4d4da]">
+            "{t.quote}"
+          </p>
+          <div class="flex items-center gap-3">
+            <div
+              class="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full text-[13px] font-medium"
+              style="background: var(--icon-box-bg); border: 1px solid var(--icon-box-border); color: var(--accent-soft)"
+              aria-hidden="true">
+              {t.initials}
             </div>
-
-            <p class="m-0 mb-7 flex-1 text-[0.9375rem] leading-[1.7] text-white/70">
-              {t.quote}
-            </p>
-
-            <div class="flex items-center gap-3 border-t border-white/8 pt-5">
-              {/* Avatar */}
-              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[0.75rem] font-bold tracking-wide" style="background: var(--brand-icon-bg); border: 1px solid var(--brand-icon-border); color: var(--brand-icon-color)">
-                {t.initials}
-              </div>
-              <div>
-                <div class="text-[0.875rem] font-semibold leading-tight text-white">{t.name}</div>
-                <div class="mt-0.5 text-[0.8rem] leading-tight text-white/40">{t.role} · {t.company}</div>
-              </div>
+            <div>
+              <div class="text-[14.5px] font-medium text-[#f1f1f4]">{t.name}</div>
+              <div class="text-[13px] font-light text-[#8b8b92]">{t.role} · {t.company}</div>
             </div>
-          </article>
-        ))}
-      </div>
-
-      <!-- Rail controls -->
-      <div class="mt-8 flex items-center justify-center gap-4">
-        <button
-          id="testimonial-prev"
-          type="button"
-          aria-label="Testimonio anterior"
-          class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/4 text-white/50 transition-[color,background-color,border-color] duration-300 ease-soft hover:border-white/25 hover:bg-white/8 hover:text-white disabled:pointer-events-none disabled:opacity-30">
-          <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-            <path d="M12.5 7.5h-10M6.5 3.5l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <span id="testimonial-counter" class="font-mono text-[0.75rem] tracking-[0.14em] text-white/40 tabular-nums" aria-live="polite">
-          1 / {testimonials.length}
-        </span>
-
-        <button
-          id="testimonial-next"
-          type="button"
-          aria-label="Testimonio siguiente"
-          class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/4 text-white/50 transition-[color,background-color,border-color] duration-300 ease-soft hover:border-white/25 hover:bg-white/8 hover:text-white disabled:pointer-events-none disabled:opacity-30">
-          <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-            <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
+          </div>
+        </article>
+      ))}
     </div>
-
   </div>
 </section>
 
 <style>
-  /* The rail scrolls; the scrollbar itself would break the composition */
-  .testimonial-track {
-    scrollbar-width: none;
-  }
-  .testimonial-track::-webkit-scrollbar {
-    display: none;
+  .marquee-track {
+    width: max-content;
   }
 </style>
-
-<script>
-  const track = document.getElementById("testimonial-track");
-  const prev = document.getElementById("testimonial-prev") as HTMLButtonElement | null;
-  const next = document.getElementById("testimonial-next") as HTMLButtonElement | null;
-  const counter = document.getElementById("testimonial-counter");
-
-  if (track && prev && next && counter) {
-    const cards = Array.from(track.querySelectorAll<HTMLElement>(".testimonial-card"));
-    const total = cards.length;
-
-    /** Index of the card whose left edge sits closest to the rail's scroll position. */
-    const currentIndex = () => {
-      let best = 0;
-      let bestDistance = Infinity;
-      cards.forEach((card, i) => {
-        const distance = Math.abs(card.offsetLeft - track.scrollLeft);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          best = i;
-        }
-      });
-      return best;
-    };
-
-    const sync = () => {
-      const i = currentIndex();
-      counter.textContent = `${i + 1} / ${total}`;
-      // A rail wider than its cards has nothing left to scroll — disable both ends
-      const atStart = track.scrollLeft <= 1;
-      const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 1;
-      prev.disabled = atStart;
-      next.disabled = atEnd;
-    };
-
-    const goTo = (i: number) => {
-      const target = cards[Math.max(0, Math.min(total - 1, i))];
-      if (target) track.scrollTo({ left: target.offsetLeft, behavior: "smooth" });
-    };
-
-    prev.addEventListener("click", () => goTo(currentIndex() - 1));
-    next.addEventListener("click", () => goTo(currentIndex() + 1));
-    track.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
-    sync();
-  }
-</script>
