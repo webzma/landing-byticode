@@ -8,14 +8,13 @@ import danielImage from "../assets/members/daniel.jpeg";
 const avatars = [wilberkImage, juanImage, emmanuelImage, danielImage];
 ---
 
-<div class="relative overflow-hidden">
+<div class="hero-wrap relative overflow-hidden">
   <!-- Cielo estrellado + aurora + grano (el canvas lo anima motion.ts) -->
   <div data-bg aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
     <div class="aurora aurora-a"></div>
     <div class="aurora aurora-b"></div>
-    <canvas data-sky class="absolute inset-0 block h-full w-full"></canvas>
+    <canvas data-sky class="hero-sky absolute inset-0 block h-full w-full"></canvas>
     <div class="hero-bloom"></div>
-    <div class="hero-horizon"></div>
     <div class="hero-noise"></div>
   </div>
 
@@ -50,6 +49,11 @@ const avatars = [wilberkImage, juanImage, emmanuelImage, danielImage];
 
 <style>
   /* ── Capas de fondo: tal cual la referencia ─────────────────────── */
+  .hero-wrap {
+    /* altura del difuminado con el que la atmósfera del hero muere antes
+       de tocar el borde recortado del contenedor */
+    --hero-fade: 220px;
+  }
   .aurora {
     position: absolute;
     pointer-events: none;
@@ -88,27 +92,21 @@ const avatars = [wilberkImage, juanImage, emmanuelImage, danielImage];
       transparent 74%
     );
     filter: blur(42px);
-    mask-image: linear-gradient(to bottom, #000 60%, transparent 94%);
-    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 94%);
+    mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
     animation: byti-drift 16s ease-in-out infinite;
   }
-  .hero-horizon {
-    position: absolute;
-    bottom: 118px;
-    left: 50%;
-    width: 70%;
-    height: 1px;
-    transform: translateX(-50%);
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(170, 195, 255, 0.5) 42%,
-      rgba(190, 210, 255, 0.62) 50%,
-      rgba(170, 195, 255, 0.5) 58%,
-      transparent
+  /* El cielo y el grano llegan al borde inferior del hero, y ese borde lo
+     recorta overflow-hidden: sin difuminarlos, el corte se lee como una
+     costura de ancho completo entre el hero y la sección siguiente. */
+  .hero-sky,
+  .hero-noise {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--hero-fade)), transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--hero-fade)),
+      transparent 100%
     );
-    mask-image: linear-gradient(to bottom, transparent, #000);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000);
   }
   .hero-noise {
     position: absolute;
